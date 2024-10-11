@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "书籍/Go语言圣经/第1章 入门/1.3. 查找重复的行.md",
+                "file": "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "书籍/Go语言圣经/第1章 入门/1.3. 查找重复的行.md",
+                "file": "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "书籍/Go语言圣经/第1章 入门/1.3. 查找重复的行.md",
+                "file": "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "书籍/Go语言圣经/第1章 入门/1.3. 查找重复的行.md"
+                "file": "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md"
               }
             }
           },
@@ -159,16 +159,26 @@
       "digitalgarden:Digital Garden Publication Center": false
     }
   },
-  "active": "fd374cd7d06b5eba",
+  "active": "74b427e3fd98e1b0",
   "lastOpenFiles": [
-    "书籍/Go语言圣经/第1章 入门/1.2. 命令行参数.md",
+    "书籍/Go语言圣经/第1章 入门/1.7. Web服务.md",
+    "书籍/Go语言圣经/第1章 入门/1.6. 并发获取多个URL.md",
+    "书籍/Go语言圣经/第1章 入门/1.5. 获取URL.md",
+    "书籍/Go语言圣经/第1章 入门/1.4. GIF动画.md",
+    "书籍/Go语言圣经/第1章 入门/1.3. 查找重复的行.md",
     "书籍/Go语言圣经/第1章 入门/1.1. Hello, World.md",
+    "书籍/Go语言圣经/第1章 入门/1.2. 命令行参数.md",
+    "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md",
+    "书籍/Go语言圣经/第8章 Goroutines和Channels/8.9. 并发的退出.md",
+    "书籍/Go语言圣经/第13章 底层编程/本章概要.md",
+    "书籍/MySQL是怎样运行的/test.go",
+    "书籍/MySQL是怎样运行的/docs/mysql",
+    "书籍/MySQL是怎样运行的/docs",
     "书籍/MySQL是怎样运行的/mysql/04-从一条记录说起-InnoDB记录结构.md",
     "书籍/MySQL是怎样运行的/mysql/00-万里长征第一步（非常重要）-如何愉快的阅读本小册.md",
     "书籍/MySQL是怎样运行的/images/00-02.png",
     "书籍/MySQL是怎样运行的/mysql/文本处理.py",
     "书籍/MySQL是怎样运行的/images/00-03.jpg",
-    "书籍/Go语言圣经/第1章 入门/1.4. GIF动画.md",
     "书籍/Go语言圣经/第1章 入门/本章概要.md",
     "重回JS/2 JS基础知识/1 理解JavaScript函数式编程.md",
     "重回JS/2 JS基础知识/2 闭包的作用与原理.md",
@@ -183,22 +193,12 @@
     "后端小记/Django基础/1 初识 Django.md",
     "操作系统/第一章 操作系统引论/1.3 操作系统的发展和分类.md",
     "操作系统/第一章 操作系统引论/1.2 操作系统的特征.md",
-    "操作系统/第一章 操作系统引论/1.1 操作系统的概念，功能和目标.md",
-    "Python基础语法/进阶/1 面向对象基础.md",
-    "Python基础语法/进阶/2 封装、继承和多态.md",
-    "Python基础语法/进阶/3 面向对象高级.md",
-    "Python基础语法/番外1 Python类型标注.md",
-    "Python基础语法/番外2 Python内存管理与垃圾回收.md",
-    "Python基础语法/进阶/10 池与concurrent模块.md",
     "Untitled.loom",
     "后端小记/Django实践",
     "后端小记/Django基础",
     "后端小记",
     "Python网络/网络爬虫/demo.drawio",
     "Python网络/爬虫框架",
-    "Python网络/JS逆向",
-    "Python网络/网络爬虫",
-    "Python网络",
     "深度学习方法/img/house-pricing.png",
     "深度学习方法/graffle/cnn-basic/waldo-mask.graffle/image1.jpg",
     "深度学习方法/static/frontpage/_images/sales/jd-allsales-AI-202302-zh-6.png",
