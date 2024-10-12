@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "b65ac9fb267716cf",
+        "id": "a3073af0824f4754",
         "type": "tabs",
         "children": [
           {
-            "id": "74b427e3fd98e1b0",
+            "id": "4f984fc55a3b3bf1",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md",
+                "file": "书籍/Go语言圣经/第2章 程序结构/2.7. 作用域.md",
                 "mode": "source",
                 "source": false
               }
@@ -48,7 +48,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "练习 2.1",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md",
+                "file": "书籍/Go语言圣经/第2章 程序结构/2.7. 作用域.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md",
+                "file": "书籍/Go语言圣经/第2章 程序结构/2.7. 作用域.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md"
+                "file": "书籍/Go语言圣经/第2章 程序结构/2.7. 作用域.md"
               }
             }
           },
@@ -142,7 +142,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -155,20 +156,29 @@
       "notion-like-tables:Create loom": false,
       "templater-obsidian:Templater": false,
       "media-extended:Open media": false,
-      "obsidian-git:Open Git source control": false,
-      "digitalgarden:Digital Garden Publication Center": false
+      "obsidian-git:Open Git source control": false
     }
   },
-  "active": "74b427e3fd98e1b0",
+  "active": "4f984fc55a3b3bf1",
   "lastOpenFiles": [
-    "书籍/Go语言圣经/第1章 入门/1.7. Web服务.md",
-    "书籍/Go语言圣经/第1章 入门/1.6. 并发获取多个URL.md",
-    "书籍/Go语言圣经/第1章 入门/1.5. 获取URL.md",
-    "书籍/Go语言圣经/第1章 入门/1.4. GIF动画.md",
-    "书籍/Go语言圣经/第1章 入门/1.3. 查找重复的行.md",
-    "书籍/Go语言圣经/第1章 入门/1.1. Hello, World.md",
-    "书籍/Go语言圣经/第1章 入门/1.2. 命令行参数.md",
     "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md",
+    "书籍/Go语言圣经/第1章 入门/本章概要.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.7. 作用域.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.6. 包和文件.md",
+    "书籍/Go语言圣经/第1章 入门/1.3. 查找重复的行.md",
+    "书籍/Go语言圣经/第1章 入门/1.2. 命令行参数.md",
+    "书籍/Go语言圣经/第1章 入门/1.7. Web服务.md",
+    "书籍/深度学习方法/02 预备知识/2.1 数据操作.md",
+    "书籍/Go语言圣经/第1章 入门/1.4. GIF动画.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.1. 命名.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.5. 类型.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.4. 赋值.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.3. 变量.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.2. 声明.md",
+    "书籍/Go语言圣经/第2章 程序结构/本章概要.md",
+    "书籍/Go语言圣经/第1章 入门/1.6. 并发获取多个URL.md",
+    "书籍/Go语言圣经/第1章 入门/1.1. Hello, World.md",
+    "书籍/Go语言圣经/第1章 入门/1.5. 获取URL.md",
     "书籍/Go语言圣经/第8章 Goroutines和Channels/8.9. 并发的退出.md",
     "书籍/Go语言圣经/第13章 底层编程/本章概要.md",
     "书籍/MySQL是怎样运行的/test.go",
@@ -179,20 +189,10 @@
     "书籍/MySQL是怎样运行的/images/00-02.png",
     "书籍/MySQL是怎样运行的/mysql/文本处理.py",
     "书籍/MySQL是怎样运行的/images/00-03.jpg",
-    "书籍/Go语言圣经/第1章 入门/本章概要.md",
     "重回JS/2 JS基础知识/1 理解JavaScript函数式编程.md",
     "重回JS/2 JS基础知识/2 闭包的作用与原理.md",
     "重回JS/1 认识浏览器/1 浏览器和前端，从哪里来？.md",
     "Python网络/JS逆向/03 对称加密算法.md",
-    "Python网络/JS逆向/02 消息摘要&签名算法.md",
-    "Python网络/JS逆向/01 javascript爬虫入门.md",
-    "Python网络/说在前面.md",
-    "Python网络/番外2 Redis数据库的使用.md",
-    "Python网络/番外1 TCP三次握手与四次挥手.md",
-    "操作系统/第一章 操作系统引论/1.4 操作系统运行机制和体系结构.md",
-    "后端小记/Django基础/1 初识 Django.md",
-    "操作系统/第一章 操作系统引论/1.3 操作系统的发展和分类.md",
-    "操作系统/第一章 操作系统引论/1.2 操作系统的特征.md",
     "Untitled.loom",
     "后端小记/Django实践",
     "后端小记/Django基础",
