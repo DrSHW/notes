@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a61b2173-913a-4a11-8d90-85582e45184e" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/../.nojekyll" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../_sidebar.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/00-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/00-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/00-03.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/01-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/03-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/04-20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/05-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/06-18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/07-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/07-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/07-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/09-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/10-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/10-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/10-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/10-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/10-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/10-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/10-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/11-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/11-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/11-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/11-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/11-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/11-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/12-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/12-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/12-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/13-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/13-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/13-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/14-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/14-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/14-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/18-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/18-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/18-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/18-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/18-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/18-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/19-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/19-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/19-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/20-19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/21-23.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/22-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/23-22.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/24-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-02.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-03.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-05.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-06.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-07.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-08.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-09.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-10.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-11.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-12.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-13.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-14.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-15.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-17.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-18.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-19.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-20.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/25-21.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../images/26-01.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/00-万里长征第一步（非常重要）-如何愉快的阅读本小册.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/01-装作自己是个小白-重新认识MySQL.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/02-MySQL的调控按钮-启动选项和系统变量.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/03-乱码的前世今生-字符集和比较规则.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/04-从一条记录说起-InnoDB记录结构.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/05-盛放记录的大盒子-InnoDB数据页结构.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/06-快速查询的秘籍-B+树索引.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/07-好东西也得先学会怎么用-B+树索引的使用.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/08-数据的家-MySQL的数据目录.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/09-存放页的大池子-InnoDB的表空间.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/10-条条大路通罗马-单表访问方法.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/11-两个表的亲密接触-连接的原理.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/12-谁最便宜就选谁-MySQL基于成本的优化.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/13-兵马未动，粮草先行-InnoDB统计数据是如何收集的.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/14-不好看就要多整容-MySQL基于规则的优化（内含关于子查询优化二三事儿）.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/15-查询优化的百科全书-Explain详解（上）.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/16-查询优化的百科全书-Explain详解（下）.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/17-神兵利器-optimizer trace的神器功效.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/18-调节磁盘和CPU的矛盾-InnoDB的Buffer Pool.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/19-从猫爷被杀说起-事务简介.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/20-说过的话就一定要办到-redo日志（上）.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/21-说过的话就一定要办到-redo日志（下）.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/22-后悔了怎么办-undo日志（上）.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/23-后悔了怎么办-undo日志（下）.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/24-一条记录的多幅面孔-事务的隔离级别与MVCC.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/25-工作面试老大难-锁.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/26-写作本书时用到的一些重要的参考资料.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/MySQL是怎样运行的：从根儿上理解MySQL.ipynb" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2nHLZSddvXFoaPq8wDLnfgNG8ul" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Python.文本处理.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="文本处理" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="mysql" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/文本处理.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.文本处理" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PY-241.18034.82" />
+        <option value="bundled-python-sdk-975db3bf15a3-2767605e8bc2-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.18034.82" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="a61b2173-913a-4a11-8d90-85582e45184e" name="更改" comment="" />
+      <created>1728625111723</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1728625111723</updated>
+      <workItem from="1728625112719" duration="734000" />
+      <workItem from="1728627118456" duration="926000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/mysql$.coverage" NAME="文本处理 覆盖结果" MODIFIED="1728625248879" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
