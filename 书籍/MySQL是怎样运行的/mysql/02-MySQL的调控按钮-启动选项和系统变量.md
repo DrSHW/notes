@@ -132,19 +132,22 @@ mysqld -P 3307
 #### 类Unix操作系统中的配置文件
 在类`UNIX`操作系统中，`MySQL`会按照下列路径来寻找配置文件：
 
-| 路径名                | 备注                                 |
-| --------------------- | ------------------------------------ |
-| `/etc/my.cnf`         |                                      |
-| `/etc/mysql/my.cnf`   |                                      |
-| `SYSCONFDIR/my.cnf`   |                                      |
-| `$MYSQL_HOME/my.cnf`  | 特定于服务器的选项（仅限服务器）     |
-| `defaults-extra-file` | 命令行指定的额外配置文件路径         |
-| `~/.my.cnf`           | 用户特定选项                         |
+| 路径名                   | 备注                 |
+| --------------------- | ------------------ |
+| `/etc/my.cnf`         |                    |
+| `/etc/mysql/my.cnf`   |                    |
+| `SYSCONFDIR/my.cnf`   |                    |
+| `$MYSQL_HOME/my.cnf`  | 特定于服务器的选项（仅限服务器）   |
+| `defaults-extra-file` | 命令行指定的额外配置文件路径     |
+| `~/.my.cnf`           | 用户特定选项             |
 | `~/.mylogin.cnf`      | 用户特定的登录路径选项（仅限客户端） |
 
 在阅读这些`UNIX`操作系统下配置文件路径的时候需要注意一些事情：
 
 - `SYSCONFDIR`表示在使用`CMake`构建`MySQL`时使用`SYSCONFDIR`选项指定的目录。默认情况下，这是位于编译安装目录下的`etc`目录。
+
+> [!NOTE] CMake是什么
+> 在 MySQL 的开发和构建过程中，**CMake** 用于管理和自动化 MySQL 源代码的编译流程。由于 MySQL 是一个复杂的跨平台项目，CMake 提供了 MySQL 构建系统所需的灵活性、跨平台支持以及对依赖管理的强大功能。
 
   ```
   小贴士：如果你不懂什么是个CMAKE，什么是个编译，那就跳过吧，对我们后续的文章没什么影响。
@@ -210,14 +213,14 @@ option2 = value2      #这是option2，该选项需要选项值
 
 需要注意的一点是，`mysqld_safe`和`mysql.server`这两个程序在启动时都会读取`[mysqld]`选项组中的内容。为了直观感受一下，我们挑一些启动命令来看一下它们能读取的选项组都有哪些：
 
-|    启动命令    |    类别    |                能读取的组                |
-| :------------: | :--------: | :--------------------------------------: |
-|    `mysqld`    | 启动服务器 |          `[mysqld]`、`[server]`          |
+|      启动命令      |  类别   |                 能读取的组                  |
+| :------------: | :---: | :------------------------------------: |
+|    `mysqld`    | 启动服务器 |         `[mysqld]`、`[server]`          |
 | `mysqld_safe`  | 启动服务器 | `[mysqld]`、`[server]`、`[mysqld_safe]`  |
 | `mysql.server` | 启动服务器 | `[mysqld]`、`[server]`、`[mysql.server]` |
-|    `mysql`     | 启动客户端 |          `[mysql]`、`[client]`           |
-|  `mysqladmin`  | 启动客户端 |        `[mysqladmin]`、`[client]`        |
-|  `mysqldump`   | 启动客户端 |        `[mysqldump]`、`[client]`         |
+|    `mysql`     | 启动客户端 |          `[mysql]`、`[client]`          |
+|  `mysqladmin`  | 启动客户端 |       `[mysqladmin]`、`[client]`        |
+|  `mysqldump`   | 启动客户端 |        `[mysqldump]`、`[client]`        |
 
 现在我们以`macOS`操作系统为例，在`/etc/mysql/my.cnf`这个配置文件中添加一些内容（`Windows`系统参考上面提到的配置文件路径）：
 ```
@@ -413,7 +416,7 @@ SET [@@(GLOBAL|SESSION).]var_name = XXX;
 语句三：SET default_storage_engine = MyISAM;
 ```
 从上面的`语句三`也可以看出，<span style="color:red">如果在设置系统变量的语句中省略了作用范围，默认的作用范围就是`SESSION`</span>。也就是说`SET 系统变量名 = 值`和`SET SESSION 系统变量名 = 值`是等价的。
-
+？
 ##### 查看不同作用范围的系统变量
 既然`系统变量`有`作用范围`之分，那我们的`SHOW VARIABLES`语句查看的是什么`作用范围`的`系统变量`呢？
 
