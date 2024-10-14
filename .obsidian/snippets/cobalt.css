@@ -217,7 +217,7 @@ body{
     font-weight: bold;
     padding: 5px 7px 2px 7px;
     font-size: 0.9em;
-    font-family: "MonoLisa Variable", "LXGW WenKai GB Screen"
+    font-family: "MonoLisa Variable", "Consolas", "LXGW WenKai GB Screen"
 }
 
 .markdown-rendered pre{
