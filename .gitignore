@@ -1,2 +1,7 @@
 # 所有css文件都不同步
 .css
+
+# 所有.obsidian文件夹都不同步
+.obsidian/
+.idea/
+.vscode/
