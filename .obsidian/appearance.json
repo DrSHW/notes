@@ -4,5 +4,6 @@
   ],
   "interfaceFontFamily": "LXGW WenKai GB Screen",
   "textFontFamily": "LXGW WenKai Screen",
-  "monospaceFontFamily": "MonoLisa Variable"
+  "monospaceFontFamily": "MonoLisa Variable",
+  "showViewHeader": true
 }
