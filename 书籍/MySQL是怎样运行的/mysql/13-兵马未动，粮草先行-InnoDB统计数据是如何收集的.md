@@ -14,7 +14,7 @@
     
 设计`MySQL`的大佬们给我们提供了系统变量`innodb_stats_persistent`来控制到底采用哪种方式去存储统计数据。在`MySQL 5.6.6`之前，`innodb_stats_persistent`的值默认是`OFF`，也就是说`InnoDB`的统计数据默认是存储到内存的，之后的版本中`innodb_stats_persistent`的值默认是`ON`，也就是统计数据默认被存储到磁盘中。
     
-不过`InnoDB`默认是<span style="color:red">以表为单位来收集和存储统计数据的</span>，也就是说我们可以把某些表的统计数据（以及该表的索引统计数据）存储在磁盘上，把另一些表的统计数据存储在内存中。怎么做到的呢？我们可以在创建和修改表的时候通过指定`STATS_PERSISTENT`属性来指明该表的统计数据存储方式：
+不过`InnoDB`默认是<span style="color:pink">以表为单位来收集和存储统计数据的</span>，也就是说我们可以把某些表的统计数据（以及该表的索引统计数据）存储在磁盘上，把另一些表的统计数据存储在内存中。怎么做到的呢？我们可以在创建和修改表的时候通过指定`STATS_PERSISTENT`属性来指明该表的统计数据存储方式：
 ```
 CREATE TABLE 表名 (...) Engine=InnoDB, STATS_PERSISTENT = (1|0);
 ALTER TABLE 表名 Engine=InnoDB, STATS_PERSISTENT = (1|0);
@@ -52,7 +52,7 @@ mysql> SHOW TABLES FROM mysql LIKE 'innodb%';
 |   `clustered_index_size`   | 表的聚簇索引占用的页面数量 |
 | `sum_of_other_index_sizes` | 表的其他索引占用的页面数量 |
 
-注意这个表的主键是`(database_name,table_name)`，也就是<span style="color:red">innodb_table_stats表的每条记录代表着一个表的统计信息</span>。我们直接看一下这个表里的内容：
+注意这个表的主键是`(database_name,table_name)`，也就是<span style="color:pink">innodb_table_stats表的每条记录代表着一个表的统计信息</span>。我们直接看一下这个表里的内容：
 ```
 mysql> SELECT * FROM mysql.innodb_table_stats;
 +---------------+---------------+---------------------+--------+----------------------+--------------------------+
@@ -78,9 +78,9 @@ mysql> SELECT * FROM mysql.innodb_table_stats;
     小贴士：真实的计算过程比这个稍微复杂一些，不过大致上就是这样的啦～
     ```
 
-    可以看出来这个`n_rows`值精确与否取决于统计时采样的页面数量，设计`MySQL`的大佬很贴心的为我们准备了一个名为`innodb_stats_persistent_sample_pages`的系统变量来控制<span style="color:red">使用永久性的统计数据时，计算统计数据时采样的页面数量</span>。该值设置的越大，统计出的`n_rows`值越精确，但是统计耗时也就最久；该值设置的越小，统计出的`n_rows`值越不精确，但是统计耗时特别少。所以在实际使用是需要我们去权衡利弊，该系统变量的默认值是`20`。
+    可以看出来这个`n_rows`值精确与否取决于统计时采样的页面数量，设计`MySQL`的大佬很贴心的为我们准备了一个名为`innodb_stats_persistent_sample_pages`的系统变量来控制<span style="color:pink">使用永久性的统计数据时，计算统计数据时采样的页面数量</span>。该值设置的越大，统计出的`n_rows`值越精确，但是统计耗时也就最久；该值设置的越小，统计出的`n_rows`值越不精确，但是统计耗时特别少。所以在实际使用是需要我们去权衡利弊，该系统变量的默认值是`20`。
     
-    我们前面说过，不过`InnoDB`默认是<span style="color:red">以表为单位来收集和存储统计数据的</span>，我们也可以单独设置某个表的采样页面的数量，设置方式就是在创建或修改表的时候通过指定`STATS_SAMPLE_PAGES`属性来指明该表的统计数据存储方式：
+    我们前面说过，不过`InnoDB`默认是<span style="color:pink">以表为单位来收集和存储统计数据的</span>，我们也可以单独设置某个表的采样页面的数量，设置方式就是在创建或修改表的时候通过指定`STATS_SAMPLE_PAGES`属性来指明该表的统计数据存储方式：
     
     ```
     CREATE TABLE 表名 (...) Engine=InnoDB, STATS_SAMPLE_PAGES = 具体的采样页面数量;
@@ -91,7 +91,7 @@ mysql> SELECT * FROM mysql.innodb_table_stats;
     如果我们在创建表的语句中并没有指定`STATS_SAMPLE_PAGES`属性的话，将默认使用系统变量`innodb_stats_persistent_sample_pages`的值作为该属性的值。
     
 #### clustered_index_size和sum_of_other_index_sizes统计项的收集
-统计这两个数据需要大量用到我们之前介绍的`InnoDB`表空间的知识，<span style="color:red">如果大家压根儿没有看那一章，那下面的计算过程大家还是不要看了（看也看不懂）</span>；如果看过了，那大家就会发现`InnoDB`表空间的知识真是有用啊啊啊！！！
+统计这两个数据需要大量用到我们之前介绍的`InnoDB`表空间的知识，<span style="color:pink">如果大家压根儿没有看那一章，那下面的计算过程大家还是不要看了（看也看不懂）</span>；如果看过了，那大家就会发现`InnoDB`表空间的知识真是有用啊啊啊！！！
 
 这两个统计项的收集过程如下：
 
@@ -126,7 +126,7 @@ mysql> SELECT * FROM mysql.innodb_table_stats;
     
 - 分别计算聚簇索引的叶子结点段和非叶子节点段占用的页面数，它们的和就是`clustered_index_size`的值，按照同样的套路把其余索引占用的页面数都算出来，加起来之后就是`sum_of_other_index_sizes`的值。
 
-这里需要大家注意一个问题，我们说一个段的数据在非常多时（超过32个页面），会以`区`为单位来申请空间，这里头的问题是<span style="color:red">以区为单位申请空间中有一些页可能并没有使用</span>，但是在统计`clustered_index_size`和`sum_of_other_index_sizes`时都把它们算进去了，所以说聚簇索引和其他的索引占用的页面数可能比这两个值要小一些。
+这里需要大家注意一个问题，我们说一个段的数据在非常多时（超过32个页面），会以`区`为单位来申请空间，这里头的问题是<span style="color:pink">以区为单位申请空间中有一些页可能并没有使用</span>，但是在统计`clustered_index_size`和`sum_of_other_index_sizes`时都把它们算进去了，所以说聚簇索引和其他的索引占用的页面数可能比这两个值要小一些。
 
 ### innodb_index_stats
 直接看一下这个`innodb_index_stats`表中的各个列都是干嘛的：
@@ -142,7 +142,7 @@ mysql> SELECT * FROM mysql.innodb_table_stats;
 |   `sample_size`    | 为生成统计数据而采样的页面数量 |
 | `stat_description` | 对应的统计项的描述             |
 
-注意这个表的主键是`(database_name,table_name,index_name,stat_name)`，其中的`stat_name`是指统计项的名称，也就是说<span style="color:red">innodb_index_stats表的每条记录代表着一个索引的一个统计项</span>。可能这会大家有些懵逼这个统计项到底指什么，别着急，我们直接看一下关于`single_table`表的索引统计数据都有些什么：
+注意这个表的主键是`(database_name,table_name,index_name,stat_name)`，其中的`stat_name`是指统计项的名称，也就是说<span style="color:pink">innodb_index_stats表的每条记录代表着一个索引的一个统计项</span>。可能这会大家有些懵逼这个统计项到底指什么，别着急，我们直接看一下关于`single_table`表的索引统计数据都有些什么：
 
 ```
 mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
@@ -203,9 +203,9 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
 
 - 开启`innodb_stats_auto_recalc`。
 
-    系统变量`innodb_stats_auto_recalc`决定着服务器是否自动重新计算统计数据，它的默认值是`ON`，也就是该功能默认是开启的。每个表都维护了一个变量，该变量记录着对该表进行增删改的记录条数，如果发生变动的记录数量超过了表大小的`10%`，并且自动重新计算统计数据的功能是打开的，那么服务器会重新进行一次统计数据的计算，并且更新`innodb_table_stats`和`innodb_index_stats`表。不过<span style="color:red">自动重新计算统计数据的过程是异步发生的</span>，也就是即使表中变动的记录数超过了`10%`，自动重新计算统计数据也不会立即发生，可能会延迟几秒才会进行计算。
+    系统变量`innodb_stats_auto_recalc`决定着服务器是否自动重新计算统计数据，它的默认值是`ON`，也就是该功能默认是开启的。每个表都维护了一个变量，该变量记录着对该表进行增删改的记录条数，如果发生变动的记录数量超过了表大小的`10%`，并且自动重新计算统计数据的功能是打开的，那么服务器会重新进行一次统计数据的计算，并且更新`innodb_table_stats`和`innodb_index_stats`表。不过<span style="color:pink">自动重新计算统计数据的过程是异步发生的</span>，也就是即使表中变动的记录数超过了`10%`，自动重新计算统计数据也不会立即发生，可能会延迟几秒才会进行计算。
     
-    再一次强调，`InnoDB`默认是<span style="color:red">以表为单位来收集和存储统计数据的</span>，我们也可以单独为某个表设置是否自动重新计算统计数的属性，设置方式就是在创建或修改表的时候通过指定`STATS_AUTO_RECALC`属性来指明该表的统计数据存储方式：
+    再一次强调，`InnoDB`默认是<span style="color:pink">以表为单位来收集和存储统计数据的</span>，我们也可以单独为某个表设置是否自动重新计算统计数的属性，设置方式就是在创建或修改表的时候通过指定`STATS_AUTO_RECALC`属性来指明该表的统计数据存储方式：
     ```
     CREATE TABLE 表名 (...) Engine=InnoDB, STATS_AUTO_RECALC = (1|0);
     
@@ -226,10 +226,10 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
     +------------------------+---------+----------+----------+
     1 row in set (0.08 sec)
     ```
-    需要注意的是，<span style="color:red">ANALYZE TABLE语句会立即重新计算统计数据，也就是这个过程是同步的</span>，在表中索引多或者采样页面特别多时这个过程可能会特别慢，请不要没事儿就运行一下`ANALYZE TABLE`语句，最好在业务不是很繁忙的时候再运行。
+    需要注意的是，<span style="color:pink">ANALYZE TABLE语句会立即重新计算统计数据，也就是这个过程是同步的</span>，在表中索引多或者采样页面特别多时这个过程可能会特别慢，请不要没事儿就运行一下`ANALYZE TABLE`语句，最好在业务不是很繁忙的时候再运行。
     
 ### 手动更新`innodb_table_stats`和`innodb_index_stats`表
-其实`innodb_table_stats`和`innodb_index_stats`表就相当于一个普通的表一样，我们能对它们做增删改查操作。这也就意味着我们可以<span style="color:red">手动更新某个表或者索引的统计数据</span>。比如说我们想把`single_table`表关于行数的统计数据更改一下可以这么做：
+其实`innodb_table_stats`和`innodb_index_stats`表就相当于一个普通的表一样，我们能对它们做增删改查操作。这也就意味着我们可以<span style="color:pink">手动更新某个表或者索引的统计数据</span>。比如说我们想把`single_table`表关于行数的统计数据更改一下可以这么做：
 
 - 步骤一：更新`innodb_table_stats`表。
     
@@ -254,7 +254,7 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
 
 与永久性的统计数据不同，非永久性的统计数据采样的页面数量是由`innodb_stats_transient_sample_pages`控制的，这个系统变量的默认值是`8`。
 
-另外，由于非永久性的统计数据经常更新，所以导致`MySQL`查询优化器计算查询成本的时候依赖的是经常变化的统计数据，也就会<span style="color:red">生成经常变化的执行计划</span>，这个可能让大家有些懵逼。不过最近的`MySQL`版本都不咋用这种基于内存的非永久性统计数据了，所以我们也就不深入介绍它了。
+另外，由于非永久性的统计数据经常更新，所以导致`MySQL`查询优化器计算查询成本的时候依赖的是经常变化的统计数据，也就会<span style="color:pink">生成经常变化的执行计划</span>，这个可能让大家有些懵逼。不过最近的`MySQL`版本都不咋用这种基于内存的非永久性统计数据了，所以我们也就不深入介绍它了。
 
 ## innodb_stats_method的使用
 我们知道`索引列不重复的值的数量`这个统计数据对于`MySQL`查询优化器十分重要，因为通过它可以计算出在索引列中平均一个值重复多少行，它的应用场景主要有两个：
@@ -338,7 +338,7 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
 
 - `nulls_ignored`：直接把`NULL`值忽略掉。
 
-反正这个锅是甩给用户了，当你选定了`innodb_stats_method`值之后，优化器即使选择了不是最优的执行计划，那也跟设计`MySQL`的大佬们没关系了～ 当然对于用户的我们来说，<span style="color:red">最好不在索引列中存放NULL值才是正解</span>。
+反正这个锅是甩给用户了，当你选定了`innodb_stats_method`值之后，优化器即使选择了不是最优的执行计划，那也跟设计`MySQL`的大佬们没关系了～ 当然对于用户的我们来说，<span style="color:pink">最好不在索引列中存放NULL值才是正解</span>。
 
 ## 总结
 

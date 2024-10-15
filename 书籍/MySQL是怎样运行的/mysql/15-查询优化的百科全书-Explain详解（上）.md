@@ -29,7 +29,7 @@ mysql> EXPLAIN SELECT 1;
 |   `filtered`    | 某个表经过搜索条件过滤后剩余记录条数的百分比               |
 |     `Extra`     | 一些额外的信息                                             |
 
-需要注意的是，<span style="color:red">大家如果看不懂上面输出列含义，那是正常的，千万不要纠结～</span>。我在这里把它们都列出来只是为了描述一个轮廓，让大家有一个大致的印象，下面会细细道来，等会儿说完了不信你不会～ 为了故事的顺利发展，我们还是要请出我们前面已经用了n遍的`single_table`表，为了防止大家忘了，再把它的结构描述一遍：
+需要注意的是，<span style="color:pink">大家如果看不懂上面输出列含义，那是正常的，千万不要纠结～</span>。我在这里把它们都列出来只是为了描述一个轮廓，让大家有一个大致的印象，下面会细细道来，等会儿说完了不信你不会～ 为了故事的顺利发展，我们还是要请出我们前面已经用了n遍的`single_table`表，为了防止大家忘了，再把它的结构描述一遍：
 ```
 CREATE TABLE single_table (
     id INT NOT NULL AUTO_INCREMENT,
@@ -52,7 +52,7 @@ CREATE TABLE single_table (
 ## 执行计划输出中各列详解
 
 ### table
-不论我们的查询语句有多复杂，里边儿包含了多少个表，到最后也是需要对每个表进行单表访问的，所以设计`MySQL`的大佬规定<span style="color:red">EXPLAIN语句输出的每条记录都对应着某个单表的访问方法，该条记录的table列代表着该表的表名</span>。所以我们看一条比较简单的查询语句：
+不论我们的查询语句有多复杂，里边儿包含了多少个表，到最后也是需要对每个表进行单表访问的，所以设计`MySQL`的大佬规定<span style="color:pink">EXPLAIN语句输出的每条记录都对应着某个单表的访问方法，该条记录的table列代表着该表的表名</span>。所以我们看一条比较简单的查询语句：
 ```
 mysql> EXPLAIN SELECT * FROM s1;
 +----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+-------+
@@ -117,7 +117,7 @@ mysql> EXPLAIN SELECT * FROM s1 WHERE key1 = 'a';
 +----+-------------+-------+------------+------+---------------+----------+---------+-------+------+----------+-------+
 1 row in set, 1 warning (0.03 sec)
 ```
-对于连接查询来说，一个`SELECT`关键字后边的`FROM`子句中可以跟随多个表，所以在连接查询的执行计划中，<span style="color:red">每个表都会对应一条记录，但是这些记录的id值都是相同的</span>，比如：
+对于连接查询来说，一个`SELECT`关键字后边的`FROM`子句中可以跟随多个表，所以在连接查询的执行计划中，<span style="color:pink">每个表都会对应一条记录，但是这些记录的id值都是相同的</span>，比如：
 ```
 mysql> EXPLAIN SELECT * FROM s1 INNER JOIN s2;
 +----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+---------------------------------------+
@@ -128,7 +128,7 @@ mysql> EXPLAIN SELECT * FROM s1 INNER JOIN s2;
 +----+-------------+-------+------------+------+---------------+------+---------+------+------+----------+---------------------------------------+
 2 rows in set, 1 warning (0.01 sec)
 ```
-可以看到，上述连接查询中参与连接的`s1`和`s2`表分别对应一条记录，但是这两条记录对应的`id`值都是`1`。这里需要大家记住的是，<span style="color:red">在连接查询的执行计划中，每个表都会对应一条记录，这些记录的id列的值是相同的，出现在前面的表表示驱动表，出现在后边的表表示被驱动表</span>。所以从上面的`EXPLAIN`输出中我们可以看出，查询优化器准备让`s1`表作为驱动表，让`s2`表作为被驱动表来执行查询。
+可以看到，上述连接查询中参与连接的`s1`和`s2`表分别对应一条记录，但是这两条记录对应的`id`值都是`1`。这里需要大家记住的是，<span style="color:pink">在连接查询的执行计划中，每个表都会对应一条记录，这些记录的id列的值是相同的，出现在前面的表表示驱动表，出现在后边的表表示被驱动表</span>。所以从上面的`EXPLAIN`输出中我们可以看出，查询优化器准备让`s1`表作为驱动表，让`s2`表作为被驱动表来执行查询。
 
 对于包含子查询的查询语句来说，就可能涉及多个`SELECT`关键字，所以在包含子查询的查询语句的执行计划中，每个`SELECT`关键字都会对应一个唯一的`id`值，比如这样：
 ```
@@ -143,7 +143,7 @@ mysql> EXPLAIN SELECT * FROM s1 WHERE key1 IN (SELECT key1 FROM s2) OR key3 = 'a
 ```
 从输出结果中我们可以看到，`s1`表在外层查询中，外层查询有一个独立的`SELECT`关键字，所以第一条记录的`id`值就是`1`，`s2`表在子查询中，子查询有一个独立的`SELECT`关键字，所以第二条记录的`id`值就是`2`。
 
-但是这里大家需要特别注意，<span style="color:red">查询优化器可能对涉及子查询的查询语句进行重写，从而转换为连接查询</span>。所以如果我们想知道查询优化器对某个包含子查询的语句是否进行了重写，直接查看执行计划就好了，比如说：
+但是这里大家需要特别注意，<span style="color:pink">查询优化器可能对涉及子查询的查询语句进行重写，从而转换为连接查询</span>。所以如果我们想知道查询优化器对某个包含子查询的语句是否进行了重写，直接查看执行计划就好了，比如说：
 ```
 mysql> EXPLAIN SELECT * FROM s1 WHERE key1 IN (SELECT key3 FROM s2 WHERE common_field = 'a');
 +----+-------------+-------+------------+------+---------------+----------+---------+-------------------+------+----------+------------------------------+
@@ -154,7 +154,7 @@ mysql> EXPLAIN SELECT * FROM s1 WHERE key1 IN (SELECT key3 FROM s2 WHERE common_
 +----+-------------+-------+------------+------+---------------+----------+---------+-------------------+------+----------+------------------------------+
 2 rows in set, 1 warning (0.00 sec)
 ```
-可以看到，虽然我们的查询语句是一个子查询，但是执行计划中`s1`和`s2`表对应的记录的`id`值全部是`1`，这就表明了<span style="color:red">查询优化器将子查询转换为了连接查询</span>。
+可以看到，虽然我们的查询语句是一个子查询，但是执行计划中`s1`和`s2`表对应的记录的`id`值全部是`1`，这就表明了<span style="color:pink">查询优化器将子查询转换为了连接查询</span>。
 
 对于包含`UNION`子句的查询语句来说，每个`SELECT`关键字对应一个`id`值也是没错的，不过还是有点儿特别的东西，比方说下面这个查询：
 ```
@@ -266,7 +266,7 @@ mysql> EXPLAIN SELECT * FROM s1  UNION ALL SELECT * FROM s2;
     +----+-------------+-------+------------+-------+---------------+----------+---------+------+------+----------+-------------+
     2 rows in set, 1 warning (0.00 sec)
     ```
-    可以看到，外层查询的`select_type`就是`PRIMARY`，子查询的`select_type`就是`SUBQUERY`。需要大家注意的是，<span style="color:red">由于select_type为SUBQUERY的子查询由于会被物化，所以只需要执行一遍</span>。
+    可以看到，外层查询的`select_type`就是`PRIMARY`，子查询的`select_type`就是`SUBQUERY`。需要大家注意的是，<span style="color:pink">由于select_type为SUBQUERY的子查询由于会被物化，所以只需要执行一遍</span>。
     
 - `DEPENDENT SUBQUERY`
 
@@ -281,7 +281,7 @@ mysql> EXPLAIN SELECT * FROM s1  UNION ALL SELECT * FROM s2;
     +----+--------------------+-------+------------+------+-------------------+----------+---------+-------------------+------+----------+-------------+
     2 rows in set, 2 warnings (0.00 sec)
     ```
-    需要大家注意的是，<span style="color:red">select_type为DEPENDENT SUBQUERY的查询可能会被执行多次</span>。
+    需要大家注意的是，<span style="color:pink">select_type为DEPENDENT SUBQUERY的查询可能会被执行多次</span>。
     
 - `DEPENDENT UNION`    
     
@@ -361,7 +361,7 @@ mysql> EXPLAIN SELECT * FROM s1 WHERE key1 = 'a';
 
 - `system`
 
-    当表中只有一条记录并且<span style="color:red">该表使用的存储引擎的统计数据是精确的，比如MyISAM、Memory</span>，那么对该表的访问方法就是`system`。比方说我们新建一个`MyISAM`表，并为其插入一条记录：
+    当表中只有一条记录并且<span style="color:pink">该表使用的存储引擎的统计数据是精确的，比如MyISAM、Memory</span>，那么对该表的访问方法就是`system`。比方说我们新建一个`MyISAM`表，并为其插入一条记录：
     
     ```
     mysql> CREATE TABLE t(i int) Engine=MyISAM;
@@ -416,7 +416,7 @@ mysql> EXPLAIN SELECT * FROM s1 WHERE key1 = 'a';
     
 - `ref`
 
-    当通过普通的二级索引列与常量进行等值匹配时来查询某个表，那么对该表的访问方法就<span style="color:red">可能</span>是`ref`，最开始举过例子了，就不重复举例了。
+    当通过普通的二级索引列与常量进行等值匹配时来查询某个表，那么对该表的访问方法就<span style="color:pink">可能</span>是`ref`，最开始举过例子了，就不重复举例了。
     
 - `fulltext`
 
@@ -424,7 +424,7 @@ mysql> EXPLAIN SELECT * FROM s1 WHERE key1 = 'a';
     
 - `ref_or_null`
 
-    当对普通二级索引进行等值匹配查询，该索引列的值也可以是`NULL`值时，那么对该表的访问方法就<span style="color:red">可能</span>是`ref_or_null`，比如说：
+    当对普通二级索引进行等值匹配查询，该索引列的值也可以是`NULL`值时，那么对该表的访问方法就<span style="color:pink">可能</span>是`ref_or_null`，比如说：
     
     ```
     mysql> EXPLAIN SELECT * FROM s1 WHERE key1 = 'a' OR key1 IS NULL;
@@ -484,7 +484,7 @@ mysql> EXPLAIN SELECT * FROM s1 WHERE key1 = 'a';
     
 - `range`
 
-    如果使用索引获取某些`范围区间`的记录，那么就<span style="color:red">可能</span>使用到`range`访问方法，比如下面的这个查询：
+    如果使用索引获取某些`范围区间`的记录，那么就<span style="color:pink">可能</span>使用到`range`访问方法，比如下面的这个查询：
     
     ```
     mysql> EXPLAIN SELECT * FROM s1 WHERE key1 IN ('a', 'b', 'c');
@@ -565,7 +565,7 @@ mysql> EXPLAIN SELECT key_part2 FROM s1 WHERE key_part3 = 'a';
 1 row in set, 1 warning (0.00 sec)
 ```
 
-另外需要注意的一点是，<span style="color:red">possible_keys列中的值并不是越多越好，可能使用的索引越多，查询优化器计算查询成本时就得花费更长时间，所以如果可以的话，尽量删除那些用不到的索引</span>。
+另外需要注意的一点是，<span style="color:pink">possible_keys列中的值并不是越多越好，可能使用的索引越多，查询优化器计算查询成本时就得花费更长时间，所以如果可以的话，尽量删除那些用不到的索引</span>。
 
 ### key_len
 `key_len`列表示当优化器决定使用某个索引执行查询时，该索引记录的最大长度，它是由这三个部分构成的：
