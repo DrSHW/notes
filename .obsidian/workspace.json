@@ -1,0 +1,201 @@
+{
+  "main": {
+    "id": "2ad16d6b62fa544e",
+    "type": "split",
+    "children": [
+      {
+        "id": "a3073af0824f4754",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "178b8f019f464a87",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "书籍/Go语言圣经/第3章 基础数据类型/3.6. 常量.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "33e25da3adc21403",
+    "type": "split",
+    "children": [
+      {
+        "id": "41954b2e84189327",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "fd374cd7d06b5eba",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "f4ac28a540843e5e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "练习 2.1",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "4e90f107c7a4ea06",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "2a264efb127e44cb",
+    "type": "split",
+    "children": [
+      {
+        "id": "45b95c48e535d256",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1694b35ba9260ccd",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "书籍/Go语言圣经/第3章 基础数据类型/3.6. 常量.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "123abb6314d8d2be",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "书籍/Go语言圣经/第3章 基础数据类型/3.6. 常量.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "ab423b064d530a7a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "56f94a4c1238e7ce",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "书籍/Go语言圣经/第3章 基础数据类型/3.6. 常量.md"
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "notion-like-tables:Create loom": false,
+      "templater-obsidian:Templater": false,
+      "media-extended:Open media": false
+    }
+  },
+  "active": "56f94a4c1238e7ce",
+  "lastOpenFiles": [
+    "书籍/Go语言圣经/第3章 基础数据类型/3.6. 常量.md",
+    "书籍/Go语言圣经/第1章 入门/1.7. Web服务.md",
+    "书籍/Go语言圣经/第3章 基础数据类型/3.5. 字符串.md",
+    "书籍/MySQL是怎样运行的/mysql/01-装作自己是个小白-重新认识MySQL.md",
+    "书籍/MySQL是怎样运行的/mysql/00-万里长征第一步（非常重要）-如何愉快的阅读本小册.md",
+    "书籍/MySQL是怎样运行的/_sidebar.md",
+    "书籍/Go语言圣经/第3章 基础数据类型/3.4. 布尔型.md",
+    "书籍/Go语言圣经/第3章 基础数据类型/3.3. 复数.md",
+    "书籍/Go语言圣经/第3章 基础数据类型/3.2. 浮点数.md",
+    "书籍/Go语言圣经/第3章 基础数据类型/本章概要.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.6. 包和文件.md",
+    "书籍/Go语言圣经/第1章 入门/1.4. GIF动画.md",
+    "书籍/Go语言圣经/第3章 基础数据类型/3.1. 整型.md",
+    "书籍/Go语言圣经/第1章 入门/1.5. 获取URL.md",
+    "书籍/Go语言圣经/第1章 入门/1.3. 查找重复的行.md",
+    "书籍/Go语言圣经/第1章 入门/1.2. 命令行参数.md",
+    "书籍/Go语言圣经/第1章 入门/1.6. 并发获取多个URL.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.7. 作用域.md",
+    "书籍/Go语言圣经/第1章 入门/1.8. 本章要点.md",
+    "书籍/Go语言圣经/第1章 入门/本章概要.md",
+    "书籍/深度学习方法/02 预备知识/2.1 数据操作.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.1. 命名.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.5. 类型.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.4. 赋值.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.3. 变量.md",
+    "书籍/Go语言圣经/第2章 程序结构/2.2. 声明.md",
+    "书籍/MySQL是怎样运行的/test.go",
+    "书籍/MySQL是怎样运行的/docs/mysql",
+    "书籍/MySQL是怎样运行的/docs",
+    "书籍/MySQL是怎样运行的/images/00-02.png",
+    "书籍/MySQL是怎样运行的/mysql/文本处理.py",
+    "书籍/MySQL是怎样运行的/images/00-03.jpg",
+    "Untitled.loom",
+    "后端小记/Django实践",
+    "后端小记/Django基础",
+    "后端小记",
+    "Python网络/网络爬虫/demo.drawio",
+    "Python网络/爬虫框架",
+    "深度学习方法/img/house-pricing.png",
+    "深度学习方法/graffle/cnn-basic/waldo-mask.graffle/image1.jpg",
+    "深度学习方法/static/frontpage/_images/sales/jd-allsales-AI-202302-zh-6.png",
+    "深度学习方法/static/frontpage/_images/sales/jd-202304-all-ai-zh-6.png",
+    "深度学习方法/static/frontpage/_images/sales/jd-202304-all-ai-zh-4.png",
+    "深度学习方法/static/frontpage/_images/sales/jd-202303-zh-6.png",
+    "深度学习方法/static/frontpage/_images/sales/jd-202303-all-ai-zh-6.png",
+    "深度学习方法/static/frontpage/_images/sales/jd-202303-all-ai-zh-6-full.png"
+  ]
+}

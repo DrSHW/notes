@@ -1,0 +1,9 @@
+{
+  "enabledCssSnippets": [
+    "cobalt"
+  ],
+  "interfaceFontFamily": "LXGW WenKai GB Screen",
+  "textFontFamily": "LXGW WenKai Screen",
+  "monospaceFontFamily": "Consolas",
+  "showViewHeader": true
+}
