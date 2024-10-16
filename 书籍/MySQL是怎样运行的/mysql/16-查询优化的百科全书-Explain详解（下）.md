@@ -149,7 +149,7 @@
     +----+-------------+-------+------------+------+---------------+----------+---------+-------------------+------+----------+-------------------------+
     2 rows in set, 1 warning (0.00 sec)
     ```
-    上述查询中`s1`表是驱动表，`s2`表是被驱动表，`s2.id`列是不允许存储`NULL`值的，而`WHERE`子句中又包含`s2.id IS NULL`的搜索条件，这意味着必定是驱动表的记录在被驱动表中找不到匹配`ON`子句条件的记录才会把该驱动表的记录加入到最终的结果集，所以对于某条驱动表中的记录来说，如果能在被驱动表中找到1条符合`ON`子句条件的记录，那么该驱动表的记录就不会被加入到最终的结果集，也就是说我们<span style="color:pink">没有必要到被驱动表中找到全部符合ON子句条件的记录</span>，这样可以稍微节省一点性能。
+    上述查询中`s1`表是驱动表，`s2`表是被驱动表，`s2.id`列是不允许存储`NULL`值的，而`WHERE`子句中又包含`s2.id IS NULL`的搜索条件，这意味着必定是驱动表的记录在被驱动表中找不到匹配`ON`子句条件的记录才会把该驱动表的记录加入到最终的结果集，所以对于某条驱动表中的记录来说，如果能在被驱动表中找到1条符合`ON`子句条件的记录，那么该驱动表的记录就不会被加入到最终的结果集，也就是说我们<span style="color:violet">没有必要到被驱动表中找到全部符合ON子句条件的记录</span>，这样可以稍微节省一点性能。
     ```
     小贴士：右（外）连接可以被转换为左（外）连接，所以就不提右（外）连接的情况了。
     ```
@@ -310,7 +310,7 @@
     ```
 
 ## Json格式的执行计划
-我们上面介绍的`EXPLAIN`语句输出中缺少了一个衡量执行计划好坏的重要属性 —— <span style="color:pink">成本</span>。不过设计`MySQL`的大佬贴心的为我们提供了一种查看某个执行计划花费的成本的方式：
+我们上面介绍的`EXPLAIN`语句输出中缺少了一个衡量执行计划好坏的重要属性 —— <span style="color:violet">成本</span>。不过设计`MySQL`的大佬贴心的为我们提供了一种查看某个执行计划花费的成本的方式：
 
 - 在`EXPLAIN`单词和真正的查询语句中间加上`FORMAT=JSON`。
 
@@ -468,9 +468,9 @@ mysql> SHOW WARNINGS\G
 Message: /* select#1 */ select `xiaohaizi`.`s1`.`key1` AS `key1`,`xiaohaizi`.`s2`.`key1` AS `key1` from `xiaohaizi`.`s1` join `xiaohaizi`.`s2` where ((`xiaohaizi`.`s1`.`key1` = `xiaohaizi`.`s2`.`key1`) and (`xiaohaizi`.`s2`.`common_field` is not null))
 1 row in set (0.00 sec)
 ```
-大家可以看到`SHOW WARNINGS`展示出来的信息有三个字段，分别是`Level`、`Code`、`Message`。我们最常见的就是`Code`为`1003`的信息，当`Code`值为`1003`时，`Message`字段展示的信息<span style="color:pink">类似于</span>查询优化器将我们的查询语句重写后的语句。比如我们上面的查询本来是一个左（外）连接查询，但是有一个`s2.common_field IS NOT NULL`的条件，着就会导致查询优化器把左（外）连接查询优化为内连接查询，从`SHOW WARNINGS`的`Message`字段也可以看出来，原本的`LEFT JOIN`已经变成了`JOIN`。
+大家可以看到`SHOW WARNINGS`展示出来的信息有三个字段，分别是`Level`、`Code`、`Message`。我们最常见的就是`Code`为`1003`的信息，当`Code`值为`1003`时，`Message`字段展示的信息<span style="color:violet">类似于</span>查询优化器将我们的查询语句重写后的语句。比如我们上面的查询本来是一个左（外）连接查询，但是有一个`s2.common_field IS NOT NULL`的条件，着就会导致查询优化器把左（外）连接查询优化为内连接查询，从`SHOW WARNINGS`的`Message`字段也可以看出来，原本的`LEFT JOIN`已经变成了`JOIN`。
 
-但是大家一定要注意，我们说`Message`字段展示的信息<span style="color:pink">类似于</span>查询优化器将我们的查询语句重写后的语句，并不是等价于，也就是说`Message`字段展示的信息并不是标准的查询语句，在很多情况下并不能直接拿到黑框框中运行，它只能作为帮助我们理解查`MySQL`将如何执行查询语句的一个参考依据而已。
+但是大家一定要注意，我们说`Message`字段展示的信息<span style="color:violet">类似于</span>查询优化器将我们的查询语句重写后的语句，并不是等价于，也就是说`Message`字段展示的信息并不是标准的查询语句，在很多情况下并不能直接拿到黑框框中运行，它只能作为帮助我们理解查`MySQL`将如何执行查询语句的一个参考依据而已。
 
 <div STYLE="page-break-after: always;"></div>
 

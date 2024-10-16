@@ -46,7 +46,7 @@
 ```
 
 ### redo日志文件格式
-我们前面说过`log buffer`本质上是一片连续的内存空间，被划分成了若干个`512`字节大小的`block`。<span style="color:pink">将log buffer中的redo日志刷新到磁盘的本质就是把block的镜像写入日志文件中</span>，所以`redo`日志文件其实也是由若干个`512`字节大小的block组成。
+我们前面说过`log buffer`本质上是一片连续的内存空间，被划分成了若干个`512`字节大小的`block`。<span style="color:violet">将log buffer中的redo日志刷新到磁盘的本质就是把block的镜像写入日志文件中</span>，所以`redo`日志文件其实也是由若干个`512`字节大小的block组成。
 
 `redo`日志文件组中的每个文件大小都一样，格式也一样，都是由两部分组成：
 
@@ -103,7 +103,7 @@
 - `checkpoint2`：结构和`checkpoint1`一样。
 
 ## Log Sequeue Number
-自系统开始运行，就不断的在修改页面，也就意味着会不断的生成`redo`日志。`redo`日志的量在不断的递增，就像人的年龄一样，自打出生起就不断递增，永远不可能缩减了。设计`InnoDB`的大佬为记录已经写入的`redo`日志量，设计了一个称之为`Log Sequeue Number`的全局变量，翻译过来就是：`日志序列号`，简称`lsn`。不过不像人一出生的年龄是`0`岁，设计`InnoDB`的大佬<span style="color:pink">规定</span>初始的`lsn`值为`8704`（也就是一条`redo`日志也没写入时，`lsn`的值为`8704`）。
+自系统开始运行，就不断的在修改页面，也就意味着会不断的生成`redo`日志。`redo`日志的量在不断的递增，就像人的年龄一样，自打出生起就不断递增，永远不可能缩减了。设计`InnoDB`的大佬为记录已经写入的`redo`日志量，设计了一个称之为`Log Sequeue Number`的全局变量，翻译过来就是：`日志序列号`，简称`lsn`。不过不像人一出生的年龄是`0`岁，设计`InnoDB`的大佬<span style="color:violet">规定</span>初始的`lsn`值为`8704`（也就是一条`redo`日志也没写入时，`lsn`的值为`8704`）。
 
 我们知道在向`log buffer`中写入`redo`日志时不是一条一条写入的，而是以一个`mtr`生成的一组`redo`日志为单位进行写入的。而且实际上是把日志内容写在了`log block body`处。但是在统计`lsn`的增长量时，是按照实际写入的日志量加上占用的`log block header`和`log block trailer`来计算的。我们来看一个例子：
 
@@ -126,7 +126,7 @@
 ```
 小贴士：为什么初始的lsn值为8704呢？我也不太清楚，人家就这么规定的。其实你也可以规定你一生下来算1岁，只要保证随着时间的流逝，你的年龄不断增长就好了。
 ```
-从上面的描述中可以看出来，<span style="color:pink">每一组由mtr生成的redo日志都有一个唯一的LSN值与其对应，LSN值越小，说明redo日志产生的越早</span>。
+从上面的描述中可以看出来，<span style="color:violet">每一组由mtr生成的redo日志都有一个唯一的LSN值与其对应，LSN值越小，说明redo日志产生的越早</span>。
 
 ### flushed_to_disk_lsn
 `redo`日志是首先写到`log buffer`中，之后才会被刷新到磁盘上的`redo`日志文件。所以设计`InnoDB`的大佬提出了一个称之为`buf_next_to_write`的全局变量，标记当前`log buffer`中已经有哪些日志被刷新到磁盘中了。画个图表示就是这样：
@@ -149,7 +149,7 @@
 
     ![](21-11.png)
 
-综上所述，当有新的`redo`日志写入到`log buffer`时，首先`lsn`的值会增长，但`flushed_to_disk_lsn`不变，随后随着不断有`log buffer`中的日志被刷新到磁盘上，`flushed_to_disk_lsn`的值也跟着增长。<span style="color:pink">如果两者的值相同时，说明log buffer中的所有redo日志都已经刷新到磁盘中了</span>。
+综上所述，当有新的`redo`日志写入到`log buffer`时，首先`lsn`的值会增长，但`flushed_to_disk_lsn`不变，随后随着不断有`log buffer`中的日志被刷新到磁盘上，`flushed_to_disk_lsn`的值也跟着增长。<span style="color:violet">如果两者的值相同时，说明log buffer中的所有redo日志都已经刷新到磁盘中了</span>。
 
 ```
 小贴士：应用程序向磁盘写入文件时其实是先写到操作系统的缓冲区中去，如果某个写入操作要等到操作系统确认已经写到磁盘时才返回，那需要调用一下操作系统提供的fsync函数。其实只有当系统执行了fsync函数后，flushed_to_disk_lsn的值才会跟着增长，当仅仅把log buffer中的日志写入到操作系统缓冲区却没有显式的刷新到磁盘时，另外的一个称之为write_lsn的值跟着增长。不过为了大家理解上的方便，我们在讲述时把flushed_to_disk_lsn和write_lsn的概念混淆了起来。
@@ -163,11 +163,11 @@
 初始时的`LSN`值是`8704`，对应文件偏移量`2048`，之后每个`mtr`向磁盘中写入多少字节日志，`lsn`的值就增长多少。
 
 ### flush链表中的LSN
-我们知道一个`mtr`代表一次对底层页面的原子访问，在访问过程中可能会产生一组不可分割的`redo`日志，在`mtr`结束时，会把这一组`redo`日志写入到`log buffer`中。除此之外，在`mtr`结束时还有一件非常重要的事情要做，就是<span style="color:pink">把在mtr执行过程中可能修改过的页面加入到Buffer Pool的flush链表</span>。为了防止大家早已忘记`flush链表`是什么，我们再看一下图：
+我们知道一个`mtr`代表一次对底层页面的原子访问，在访问过程中可能会产生一组不可分割的`redo`日志，在`mtr`结束时，会把这一组`redo`日志写入到`log buffer`中。除此之外，在`mtr`结束时还有一件非常重要的事情要做，就是<span style="color:violet">把在mtr执行过程中可能修改过的页面加入到Buffer Pool的flush链表</span>。为了防止大家早已忘记`flush链表`是什么，我们再看一下图：
 
 ![](21-13.png)
         
-当第一次修改某个缓存在`Buffer Pool`中的页面时，就会把这个页面对应的控制块插入到`flush链表`的头部，之后再修改该页面时由于它已经在`flush`链表中了，就不再次插入了。也就是说<span style="color:pink">flush链表中的脏页是按照页面的第一次修改时间从大到小进行排序的</span>。在这个过程中会在缓存页对应的控制块中记录两个关于页面何时修改的属性：
+当第一次修改某个缓存在`Buffer Pool`中的页面时，就会把这个页面对应的控制块插入到`flush链表`的头部，之后再修改该页面时由于它已经在`flush`链表中了，就不再次插入了。也就是说<span style="color:violet">flush链表中的脏页是按照页面的第一次修改时间从大到小进行排序的</span>。在这个过程中会在缓存页对应的控制块中记录两个关于页面何时修改的属性：
 
 - `oldest_modification`：如果某个页面被加载到`Buffer Pool`后进行第一次修改，那么就将修改该页面的`mtr`开始时对应的`lsn`值写入这个属性。
 
@@ -189,10 +189,10 @@
 
     ![](21-16.png)
 
-总结一下上面说的，就是：<span style="color:pink">flush链表中的脏页按照修改发生的时间顺序进行排序，也就是按照oldest_modification代表的LSN值进行排序，被多次更新的页面不会重复插入到flush链表中，但是会更新newest_modification属性的值</span>。
+总结一下上面说的，就是：<span style="color:violet">flush链表中的脏页按照修改发生的时间顺序进行排序，也就是按照oldest_modification代表的LSN值进行排序，被多次更新的页面不会重复插入到flush链表中，但是会更新newest_modification属性的值</span>。
 
 ## checkpoint
-有一个很不幸的事实就是我们的`redo`日志文件组容量是有限的，我们不得不选择循环使用`redo`日志文件组中的文件，但是这会造成最后写的`redo`日志与最开始写的`redo`日志`追尾`，这时应该想到：<span style="color:pink">redo日志只是为了系统奔溃后恢复脏页用的，如果对应的脏页已经刷新到了磁盘，也就是说即使现在系统奔溃，那么在重启后也用不着使用redo日志恢复该页面了，所以该redo日志也就没有存在的必要了，那么它占用的磁盘空间就可以被后续的redo日志所重用</span>。也就是说：<span style="color:pink">判断某些redo日志占用的磁盘空间是否可以覆盖的依据就是它对应的脏页是否已经刷新到磁盘里</span>。我们看一下前面一直介绍的那个例子：
+有一个很不幸的事实就是我们的`redo`日志文件组容量是有限的，我们不得不选择循环使用`redo`日志文件组中的文件，但是这会造成最后写的`redo`日志与最开始写的`redo`日志`追尾`，这时应该想到：<span style="color:violet">redo日志只是为了系统奔溃后恢复脏页用的，如果对应的脏页已经刷新到了磁盘，也就是说即使现在系统奔溃，那么在重启后也用不着使用redo日志恢复该页面了，所以该redo日志也就没有存在的必要了，那么它占用的磁盘空间就可以被后续的redo日志所重用</span>。也就是说：<span style="color:violet">判断某些redo日志占用的磁盘空间是否可以覆盖的依据就是它对应的脏页是否已经刷新到磁盘里</span>。我们看一下前面一直介绍的那个例子：
 
 ![](21-17.png)
 
@@ -206,7 +206,7 @@
 
 - 步骤一：计算一下当前系统中可以被覆盖的`redo`日志对应的`lsn`值最大是多少。
 
-    `redo`日志可以被覆盖，意味着它对应的脏页被刷到了磁盘，只要我们计算出当前系统中被最早修改的脏页对应的`oldest_modification`值，那<span style="color:pink">凡是在系统lsn值小于该节点的oldest_modification值时产生的redo日志都是可以被覆盖掉的</span>，我们就把该脏页的`oldest_modification`赋值给`checkpoint_lsn`。
+    `redo`日志可以被覆盖，意味着它对应的脏页被刷到了磁盘，只要我们计算出当前系统中被最早修改的脏页对应的`oldest_modification`值，那<span style="color:violet">凡是在系统lsn值小于该节点的oldest_modification值时产生的redo日志都是可以被覆盖掉的</span>，我们就把该脏页的`oldest_modification`赋值给`checkpoint_lsn`。
 
     比方说当前系统中`页a`已经被刷新到磁盘，那么`flush链表`的尾节点就是`页c`，该节点就是当前系统中最早修改的脏页了，它的`oldest_modification`值为8916，我们就把8916赋值给`checkpoint_lsn`（也就是说在redo日志对应的lsn值小于8916时就可以被覆盖掉）。
 
@@ -214,7 +214,7 @@
 
     设计`InnoDB`的大佬维护了一个目前系统做了多少次`checkpoint`的变量`checkpoint_no`，每做一次`checkpoint`，该变量的值就加1。我们前面说过计算一个`lsn`值对应的`redo`日志文件组偏移量是很容易的，所以可以计算得到该`checkpoint_lsn`在`redo`日志文件组中对应的偏移量`checkpoint_offset`，然后把这三个值都写到`redo`日志文件组的管理信息中。
     
-    我们说过，每一个`redo`日志文件都有`2048`个字节的管理信息，但是<span style="color:pink">上述关于checkpoint的信息只会被写到日志文件组的第一个日志文件的管理信息中</span>。不过我们是存储到`checkpoint1`中还是`checkpoint2`中呢？设计`InnoDB`的大佬规定，当`checkpoint_no`的值是偶数时，就写到`checkpoint1`中，是奇数时，就写到`checkpoint2`中。
+    我们说过，每一个`redo`日志文件都有`2048`个字节的管理信息，但是<span style="color:violet">上述关于checkpoint的信息只会被写到日志文件组的第一个日志文件的管理信息中</span>。不过我们是存储到`checkpoint1`中还是`checkpoint2`中呢？设计`InnoDB`的大佬规定，当`checkpoint_no`的值是偶数时，就写到`checkpoint1`中，是奇数时，就写到`checkpoint2`中。
 
 记录完`checkpoint`的信息之后，`redo`日志文件组中各个`lsn`值的关系就像这样：
 
