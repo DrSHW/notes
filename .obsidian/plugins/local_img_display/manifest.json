@@ -1,0 +1,11 @@
+{
+	"id": "lcl-html-local-img",
+	"name": "LcL Html Local Img",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Display the img html of the local link",
+	"author": "LcL",
+	"authorUrl": "",
+	"fundingUrl": "",
+	"isDesktopOnly": false
+}
