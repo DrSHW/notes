@@ -1,9 +1,6 @@
-# 所有css文件都不同步
-.css
-
-# 所有.obsidian文件夹都不同步
-/plugins/
-
-.json
+.obsidian/plugins
+.ob_mobile/plugins
+*.json
+.DS_Store
 .idea/
 .vscode/
