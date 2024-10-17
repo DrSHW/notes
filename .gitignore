@@ -1,5 +1,6 @@
 .obsidian/plugins
 .ob_mobile/plugins
+.ob_ipad/plugins
 *.json
 .DS_Store
 .idea/
