@@ -2,6 +2,6 @@
 .ob_mobile/plugins
 .ob_ipad/plugins
 *.json
-.DS_Store
+*.DS_Store
 .idea/
 .vscode/
