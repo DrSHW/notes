@@ -23,6 +23,12 @@ body {
     --nav-item-color-active: #f0b752;
     --text-highlight-bg: #382ca3;
     --caret-color: #fff;
+    --h1-color: #f79f2a;
+    --h2-color: #f79f2a;
+    --h3-color: rgb(250, 161, 195);
+    --h4-color: rgb(250, 161, 195);
+    --h5-color: #b488ff;
+    --h6-color: #b488ff;
 }
 
 h1, .markdown-rendered h1,.HyperMD-header-1,
@@ -43,7 +49,7 @@ h4, .markdown-rendered h4,.HyperMD-header-4{
     margin-bottom: 1rem;
     margin-top: 1rem;
     position: relative;
-    color: rgb(250, 161, 195)
+    color: rgb(250, 161, 195);
 }
 h4, .markdown-rendered h5,.HyperMD-header-5,
 h6, .markdown-rendered h6,.HyperMD-header-6{
