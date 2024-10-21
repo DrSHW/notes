@@ -1,4 +1,4 @@
-# 附录C：作者简介
+## 附录C：作者简介
 
 - 柴树杉（Github [@chai2010](https://github.com/chai2010); Twitter [@chaishushan](https://twitter.com/chaishushan)）Go语言代码贡献者，Dart语言和WebAssembly等技术爱好者，著有[《WebAssembly标准入门》](https://github.com/chai2010/awesome-wasm-zh/blob/master/webassembly-primer.md)等书。
 

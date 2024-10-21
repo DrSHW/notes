@@ -1,8 +1,8 @@
-# 附录B：有趣的代码片段
+## 附录B：有趣的代码片段
 
 这里收集一些比较有意思的Go程序片段。
 
-## 自重写程序
+### 自重写程序
 
 UNIX/Go语言之父 Ken Thompson 在1983年的图灵奖演讲 Reflections on Trusting Trust 就给出了一个C语言的自重写程序。
 
@@ -48,7 +48,7 @@ package main;func main(){print(c+"\x60"+c+"\x60")};var c=`package main;func main
 
 如果有更短的版本欢迎告诉我们。
 
-## 三元表达式
+### 三元表达式
 
 ```go
 func If(condition bool, trueVal, falseVal interface{}) interface{} {
@@ -63,7 +63,7 @@ max := If(a > b, a, b).(int)
 println(max)
 ```
 
-## 禁止 main 函数退出的方法
+### 禁止 main 函数退出的方法
 
 ```go
 func main() {
@@ -79,7 +79,7 @@ func main() {
 }
 ```
 
-## 基于管道的随机数生成器
+### 基于管道的随机数生成器
 
 随机数的一个特点是不好预测。如果一个随机数的输出是可以简单预测的，那么一般会称为伪随机数。
 
@@ -107,7 +107,7 @@ func random(n int) <-chan int {
 
 基于select语言特性构造的随机数生成器。
 
-## Assert测试断言
+### Assert测试断言
 
 ```go
 type testing_TBHelper interface {
