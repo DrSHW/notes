@@ -1,5 +1,5 @@
 ##  第16章 查询优化的百科全书-Explain详解（下）
-###  执行计划输出中各列详解
+### 执行计划输出中各列详解
 
 本章紧接着上一节的内容，继续介绍`EXPLAIN`语句输出的各个列的意思。
 
@@ -309,7 +309,7 @@
     2 rows in set, 2 warnings (0.00 sec)
     ```
 
-###  Json格式的执行计划
+### Json格式的执行计划
 我们上面介绍的`EXPLAIN`语句输出中缺少了一个衡量执行计划好坏的重要属性 —— <span style="color:violet">成本</span>。不过设计`MySQL`的大佬贴心的为我们提供了一种查看某个执行计划花费的成本的方式：
 
 - 在`EXPLAIN`单词和真正的查询语句中间加上`FORMAT=JSON`。
@@ -449,7 +449,7 @@ EXPLAIN: {
 968.80 + 193.76 + 2034.60 = 3197.16
 ```
 
-###  Extented EXPLAIN
+### Extented EXPLAIN
 最后，设计`MySQL`的大佬还为我们留了个彩蛋，在我们使用`EXPLAIN`语句查看了某个查询的执行计划后，紧接着还可以使用`SHOW WARNINGS`语句查看与这个查询的执行计划有关的一些扩展信息，比如这样：
 ```
 mysql> EXPLAIN SELECT s1.key1, s2.key1 FROM s1 LEFT JOIN s2 ON s1.key1 = s2.key1 WHERE s2.common_field IS NOT NULL;

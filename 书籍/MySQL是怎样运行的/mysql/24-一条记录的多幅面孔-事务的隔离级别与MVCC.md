@@ -1,5 +1,5 @@
 ##  第24章 一条记录的多幅面孔-事务的隔离级别与MVCC
-###  事前准备
+### 事前准备
 为了故事的顺利发展，我们需要创建一个表：
 ```
 CREATE TABLE hero (
@@ -27,7 +27,7 @@ mysql> SELECT * FROM hero;
 1 row in set (0.00 sec)
 ```
 
-###  事务隔离级别
+### 事务隔离级别
 我们知道`MySQL`是一个`客户端／服务器`架构的软件，对于同一个服务器来说，可以有若干个客户端与之连接，每个客户端与服务器连接上之后，就可以称之为一个会话（`Session`）。每个客户端都可以在自己的会话中向服务器发出请求语句，一个请求语句可能是某个事务的一部分，也就是对于服务器来说可能同时处理多个事务。在事务简介的章节中我们说过事务有一个称之为`隔离性`的特性，理论上在某个事务对某个数据进行访问时，其他事务应该进行排队，当该事务提交之后，其他事务才可以继续访问这个数据。但是这样子的话对性能影响太大，我们既想保持事务的`隔离性`，又想让服务器在处理访问同一数据的多个事务时性能尽量高些，鱼和熊掌不可得兼，舍一部分`隔离性`而取性能者也。
 
 #### 事务并发执行遇到的问题
@@ -104,7 +104,7 @@ mysql> SELECT * FROM hero;
 
 `MySQL`的默认隔离级别为`REPEATABLE READ`，我们可以手动修改一下事务的隔离级别。
 
-#####  如何设置事务的隔离级别
+##### 如何设置事务的隔离级别
 我们可以通过下面的语句修改事务的隔离级别：
 ```
 SET [GLOBAL|SESSION] TRANSACTION ISOLATION LEVEL level;
@@ -179,7 +179,7 @@ mysql> SELECT @@transaction_isolation;
 小贴士：我们也可以使用设置系统变量transaction_isolation的方式来设置事务的隔离级别，不过我们前面介绍过，一般系统变量只有GLOBAL和SESSION两个作用范围，而这个transaction_isolation却有3个（与上面 SET TRANSACTION ISOLATION LEVEL的语法相对应），设置语法上有些特殊，更多详情可以参见文档：https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html#sysvar_transaction_isolation。另外，transaction_isolation是在MySQL 5.7.20的版本中引入来替换tx_isolation的，如果你使用的是之前版本的MySQL，请将上述用到系统变量transaction_isolation的地方替换为tx_isolation。
 ```
 
-###  MVCC原理
+### MVCC原理
 
 #### 版本链
 我们前面说过，对于使用`InnoDB`存储引擎的表来说，它的聚簇索引记录中都包含两个必要的隐藏列（`row_id`并不是必要的，我们创建的表中有主键或者非NULL的UNIQUE键时都不会包含`row_id`列）：
@@ -253,7 +253,7 @@ mysql> SELECT * FROM hero;
 ```
 接下来看一下`READ COMMITTED`和`REPEATABLE READ`所谓的<span style="color:violet">生成ReadView的时机不同</span>到底不同在哪里。
 
-#####  READ COMMITTED —— 每次读取数据前都生成一个ReadView
+##### READ COMMITTED —— 每次读取数据前都生成一个ReadView
 比方说现在系统里有两个`事务id`分别为`100`、`200`的事务在执行：
 ```
 # Transaction 100
@@ -338,7 +338,7 @@ SELECT * FROM hero WHERE number = 1; # 得到的列name的值为'张飞'
 
 以此类推，如果之后`事务id`为`200`的记录也提交了，再此在使用`READ COMMITTED`隔离级别的事务中查询表`hero`中`number`值为`1`的记录时，得到的结果就是`'诸葛亮'`了，具体流程我们就不分析了。总结一下就是：<span style="color:violet">使用READ COMMITTED隔离级别的事务在每次查询开始时都会生成一个独立的ReadView</span>。
 
-#####  REPEATABLE READ —— 在第一次读取数据时生成一个ReadView
+##### REPEATABLE READ —— 在第一次读取数据时生成一个ReadView
 对于使用`REPEATABLE READ`隔离级别的事务来说，只会在第一次执行查询语句时生成一个`ReadView`，之后的查询就不会重复生成了。我们还是用例子看一下是什么效果。
 
 比方说现在系统里有两个`事务id`分别为`100`、`200`的事务在执行：
@@ -432,7 +432,7 @@ SELECT * FROM hero WHERE number = 1; # 得到的列name的值仍为'刘备'
 小贴士：我们之前说执行DELETE语句或者更新主键的UPDATE语句并不会立即把对应的记录完全从页面中删除，而是执行一个所谓的delete mark操作，相当于只是对记录打上了一个删除标志位，这主要就是为MVCC服务的，大家可以对比上面举的例子自己试想一下怎么使用。另外，所谓的MVCC只是在我们进行普通的SEELCT查询时才生效，截止到目前我们所见的所有SELECT语句都算是普通的查询，至于什么是个不普通的查询，我们稍后再说～
 ```
 
-###  关于purge
+### 关于purge
 大家有没有发现两件事儿：
 - 我们说`insert undo`在事务提交之后就可以被释放掉了，而`update undo`由于还需要支持`MVCC`，不能立即删除掉。
 - 为了支持`MVCC`，对于`delete mark`操作来说，仅仅是在记录上打一个删除标记，并没有真正将它删除掉。

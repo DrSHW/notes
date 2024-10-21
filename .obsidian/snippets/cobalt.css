@@ -29,6 +29,7 @@ body {
     --h4-color: rgb(250, 161, 195);
     --h5-color: #b488ff;
     --h6-color: #b488ff;
+    --table-header-weight: bold;
 }
 
 h1, .markdown-rendered h1,.HyperMD-header-1,
@@ -174,6 +175,7 @@ table tr {
 thead {
     background-color: #324963;
     color: #9dbbdd;
+    font-weight: bold;
 }
 
 tbody {

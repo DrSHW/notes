@@ -1,24 +1,24 @@
 ##  第4章 从一条记录说起-InnoDB记录结构
-###  准备工作
+### 准备工作
 到现在为止，`MySQL`对于我们来说还是一个黑盒，我们只负责使用客户端发送请求并等待服务器返回结果，表中的数据到底存到了哪里？以什么格式存放的？`MySQL`是以什么方式来访问的这些数据？这些问题我们统统不知道，对于未知领域的探索向来就是社会主义核心价值观中的一部分，作为新一代社会主义接班人，不把它们搞懂怎么支援祖国建设呢？
 
 我们前面介绍请求处理过程的时候提到过，`MySQL`服务器上负责对表中数据的读取和写入工作的部分是`存储引擎`，而服务器又支持不同类型的存储引擎，比如`InnoDB`、`MyISAM`、`Memory`什么的，不同的存储引擎一般是由不同的人为实现不同的特性而开发的，<span style="color:violet">真实数据在不同存储引擎中存放的格式一般是不同的</span>，甚至有的存储引擎比如`Memory`都不用磁盘来存储数据，也就是说关闭服务器后表中的数据就消失了。由于`InnoDB`是`MySQL`默认的存储引擎，也是我们最常用到的存储引擎，我们也没有那么多时间去把各个存储引擎的内部实现都看一遍，所以本集要介绍的是使用`InnoDB`作为存储引擎的数据存储结构，了解了一个存储引擎的数据存储结构之后，其他的存储引擎都是依葫芦画瓢，等我们用到了再说。
 
-###  InnoDB页简介
+### InnoDB页简介
 `InnoDB`是一个将表中的数据存储到<span style="color: violet;">磁盘</span>上的存储引擎，所以即使关机后重启我们的数据还是存在的。而真正处理数据的过程是发生在内存中的，所以需要把磁盘中的数据加载到内存中，如果是处理写入或修改请求的话，还需要把内存中的内容刷新到磁盘上。而我们知道读写磁盘的速度非常慢，和内存读写差了几个数量级，所以当我们想从表中获取某些记录时，`InnoDB`存储引擎需要一条一条的把记录从磁盘上读出来么？不，那样会慢死，`InnoDB`采取的方式是：<span style="color:violet">将数据划分为若干个页，以页作为磁盘和内存之间交互的基本单位，InnoDB中页的大小一般为 ***16*** KB</span>。也就是在一般情况下，一次最少从磁盘中读取16KB的内容到内存中，一次最少把内存中的16KB内容刷新到磁盘中。
 
-###  InnoDB行格式
+### InnoDB行格式
 我们平时是以记录为单位来向表中插入数据的，这些记录在磁盘上的存放方式也被称为`行格式`或者`记录格式`。设计`InnoDB`存储引擎的大佬们到现在为止设计了4种不同类型的`行格式`，分别是`Compact`、`Redundant`、`Dynamic`和`Compressed`行格式，随着时间的推移，他们可能会设计出更多的行格式，但是不管怎么变，在原理上大体都是相同的。
 
 #### 指定行格式的语法
 我们可以在创建或修改表的语句中指定`行格式`：
-```
+```sql
 CREATE TABLE 表名 (列的信息) ROW_FORMAT=行格式名称
     
 ALTER TABLE 表名 ROW_FORMAT=行格式名称
 ```
 比如我们在`xiaohaizi`数据库里创建一个演示用的表`record_format_demo`，可以这样指定它的`行格式`：
-```
+```sql
 mysql> USE xiaohaizi;
 Database changed
 
@@ -31,13 +31,13 @@ mysql> CREATE TABLE record_format_demo (
 Query OK, 0 rows affected (0.03 sec)
 ```
 可以看到我们刚刚创建的这个表的`行格式`就是`Compact`，另外，我们还显式指定了这个表的字符集为`ascii`，因为`ascii`字符集只包括空格、标点符号、数字、大小写字母和一些不可见字符，所以我们的汉字是不能存到这个表里的。我们现在向这个表中插入两条记录：
-```
+```sql
 mysql> INSERT INTO record_format_demo(c1, c2, c3, c4) VALUES('aaaa', 'bbb', 'cc', 'd'), ('eeee', 'fff', NULL, NULL);
 Query OK, 2 rows affected (0.02 sec)
 Records: 2  Duplicates: 0  Warnings: 0
 ```
 现在表中的记录就是这个样子的：
-```
+```sql
 mysql> SELECT * FROM record_format_demo;
 +------+-----+------+------+
 | c1   | c2  | c3   | c4   |
@@ -58,10 +58,10 @@ mysql>
 
 大家从图中可以看出来，一条完整的记录其实可以被分为`记录的额外信息`和`记录的真实数据`两大部分，下面我们详细看一下这两部分的组成。
 
-#####  记录的额外信息
+##### 记录的额外信息
 这部分信息是<span style="color:violet">服务器为了描述这条记录而不得不额外添加的一些信息</span>，这些额外信息分为3类，分别是`变长字段长度列表`、`NULL值列表`和`记录头信息`，我们分别看一下。
 
-######  变长字段长度列表
+###### 变长字段长度列表
 我们知道`MySQL`支持一些变长的数据类型，比如`VARCHAR(M)`、`VARBINARY(M)`、各种`TEXT`类型，各种`BLOB`类型，我们也可以把拥有这些数据类型的列称为`变长字段`，变长字段中存储多少字节的数据是不固定的，所以我们在存储真实数据的时候需要顺便把这些数据占用的字节数也存起来，这样才不至于把`MySQL`服务器搞懵，所以这些变长字段占用的存储空间分为两部分：
 
 1. 真正的数据内容
@@ -120,7 +120,7 @@ mysql>
 小贴士：并不是所有记录都有这个 变长字段长度列表 部分，比方说表中所有的列都不是变长的数据类型的话，这一部分就不需要有。
 ```
 
-######  NULL值列表
+###### NULL值列表
 我们知道表中的某些列可能存储`NULL`值，如果把这些`NULL`值都放到`记录的真实数据`中存储会很占地方，所以`Compact`行格式把这些值为`NULL`的列统一管理起来，存储到`NULL`值列表中，它的处理过程是这样的：
 
 1. 首先统计表中允许存储`NULL`的列有哪些。
@@ -162,7 +162,7 @@ mysql>
 
 ![](04-08.png)
 
-######  记录头信息
+###### 记录头信息
 除了`变长字段长度列表`、`NULL值列表`之外，还有一个用于描述记录的`记录头信息`，它是由固定的`5`个字节组成。`5`个字节也就是`40`个二进制位，不同的位代表不同的意思，如图：
 
 ![](04-09.png)
@@ -190,7 +190,7 @@ mysql>
 小贴士：再一次强调，大家如果看不懂记录头信息里各个位代表的概念千万别纠结，我们后边会说的～
 ```
 
-#####  记录的真实数据
+##### 记录的真实数据
 对于`record_format_demo`表来说，`记录的真实数据`除了`c1`、`c2`、`c3`、`c4`这几个我们自己定义的列的数据以外，`MySQL`会为每个记录默认的添加一些列（也称为`隐藏列`），具体的列如下：
 
 |       列名       | 是否必须 | 占用空间 |          描述          |
@@ -217,13 +217,13 @@ mysql>
 
 3. 注意第2条记录中`c3`和`c4`列的值都为`NULL`，它们被存储在了前面的`NULL值列表`处，在记录的真实数据处就不再冗余存储，从而节省存储空间。
 
-#####  CHAR(M)列的存储格式
+##### CHAR(M)列的存储格式
 `record_format_demo`表的`c1`、`c2`、`c4`列的类型是`VARCHAR(10)`，而`c3`列的类型是`CHAR(10)`，我们说在`Compact`行格式下只会把变长类型的列的长度<span style="color:violet">逆序</span>存到`变长字段长度列表`中，就像这样：
 
 ![](04-12.png)
 
 但是这只是因为我们的`record_format_demo`表采用的是`ascii`字符集，这个字符集是一个定长字符集，也就是说表示一个字符采用固定的一个字节，如果采用变长的字符集（也就是表示一个字符需要的字节数不确定，比如`gbk`表示一个字符要1\~2个字节、`utf8`表示一个字符要1\~3个字节等）的话，`c3`列的长度也会被存储到`变长字段长度列表`中，比如我们修改一下`record_format_demo`表的字符集：
-```
+```sql
 mysql> ALTER TABLE record_format_demo MODIFY COLUMN c3 CHAR(10) CHARACTER SET utf8;
 Query OK, 2 rows affected (0.02 sec)
 Records: 2  Duplicates: 0  Warnings: 0
@@ -244,7 +244,7 @@ Records: 2  Duplicates: 0  Warnings: 0
 ![](04-14.png)
 
 现在我们把表`record_format_demo`的行格式修改为`Redundant`：
-```
+```sql
 mysql> ALTER TABLE record_format_demo ROW_FORMAT=Redundant;
 Query OK, 0 rows affected (0.05 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -373,15 +373,15 @@ next_record:0xBC
     
 除了以上的几点之外，`Redundant`行格式和`Compact`行格式还是大致相同的。
 
-#####  CHAR(M)列的存储格式
+##### CHAR(M)列的存储格式
 我们知道`Compact`行格式在`CHAR(M)`类型的列中存储数据的时候还挺麻烦，分变长字符集和定长字符集的情况，而在`Redundant`行格式中十分干脆，不管该列使用的字符集是什么，只要是使用`CHAR(M)`类型，占用的真实数据空间就是该字符集表示一个字符最多需要的字节数和`M`的乘积。比方说使用`utf8`字符集的`CHAR(10)`类型的列占用的真实数据空间始终为`30`个字节，使用`gbk`字符集的`CHAR(10)`类型的列占用的真实数据空间始终为`20`个字节。由此可以看出来，使用`Redundant`行格式的`CHAR(M)`类型的列是不会产生碎片的。
 
 #### 行溢出数据
 
-#####  VARCHAR(M)最多能存储的数据
+##### VARCHAR(M)最多能存储的数据
 我们知道对于`VARCHAR(M)`类型的列最多可以占用`65535`个字节。其中的`M`代表该类型最多存储的字符数量，如果我们使用`ascii`字符集的话，一个字符就代表一个字节，我们看看`VARCHAR(65535)`是否可用：
 
-```
+```sql
 mysql> CREATE TABLE varchar_size_demo(
     ->     c VARCHAR(65535)
     -> ) CHARSET=ascii ROW_FORMAT=Compact;
@@ -395,14 +395,14 @@ mysql>
 - `NULL`值标识，如果该列有`NOT NULL`属性则可以没有这部分存储空间
 
 如果该`VARCHAR`类型的列没有`NOT NULL`属性，那最多只能存储`65532`个字节的数据，因为真实数据的长度可能占用2个字节，`NULL`值标识需要占用1个字节：
-```
+```sql
 mysql> CREATE TABLE varchar_size_demo(
     ->      c VARCHAR(65532)
     -> ) CHARSET=ascii ROW_FORMAT=Compact;
 Query OK, 0 rows affected (0.02 sec)
 ```
 如果`VARCHAR`类型的列有`NOT NULL`属性，那最多只能存储`65533`个字节的数据，因为真实数据的长度可能占用2个字节，不需要`NULL`值标识：
-```
+```sql
 mysql> DROP TABLE varchar_size_demo;
 Query OK, 0 rows affected (0.01 sec)
 
@@ -412,7 +412,7 @@ mysql> CREATE TABLE varchar_size_demo(
 Query OK, 0 rows affected (0.02 sec)
 ```
 如果`VARCHAR(M)`类型的列使用的不是`ascii`字符集，那会怎么样呢？来看一下：
-```
+```sql
 mysql> DROP TABLE varchar_size_demo;
 Query OK, 0 rows affected (0.00 sec)
 
@@ -431,9 +431,9 @@ ERROR 1074 (42000): Column length too big for column 'c' (max = 21845); use BLOB
 小贴士：上述所言在列的值允许为NULL的情况下，gbk字符集下M的最大取值就是32766，utf8字符集下M的最大取值就是21844，这都是在表中只有一个字段的情况下说的，一定要记住一个行中的所有列（不包括隐藏列和记录头信息）占用的字节长度加起来不能超过65535个字节！
 ```
 
-#####  记录中的数据太多产生的溢出
+##### 记录中的数据太多产生的溢出
 我们以`ascii`字符集下的`varchar_size_demo`表为例，插入一条记录：
-```
+```sql
 mysql> CREATE TABLE varchar_size_demo(
     ->       c VARCHAR(65532)
     -> ) CHARSET=ascii ROW_FORMAT=Compact;
@@ -454,7 +454,7 @@ Query OK, 1 row affected (0.00 sec)
 
 最后需要注意的是，<span style="color:violet">不只是 ***VARCHAR(M)*** 类型的列，其他的 ***TEXT***、***BLOB*** 类型的列在存储数据非常多的时候也会发生`行溢出`</span>。
 
-#####  行溢出的临界点
+##### 行溢出的临界点
 那发生`行溢出`的临界点是什么呢？也就是说在列存储多少字节的数据时就会发生`行溢出`？
 
 `MySQL`中规定<span style="color:violet">一个页中至少存放两行记录</span>，至于为什么这么规定我们之后再说，现在看一下这个规定造成的影响。以上面的`varchar_size_demo`表为例，它只有一个列`c`，我们往这个表中插入两条记录，每条记录最少插入多少字节的数据才会`行溢出`的现象呢？这得分析一下页中的空间都是如何利用的。
@@ -471,8 +471,8 @@ Query OK, 1 row affected (0.00 sec)
     - 6个字节的`transaction_id`列
     - 7个字节的`roll_pointer`列
 
-假设一个列中存储的数据字节数为n，那么发生`行溢出`现象时需要满足这个式子：
-```
+假设一个列中存储的数据字节数为`n`，那么发生`行溢出`现象时需要满足这个式子：
+```c
 136 + 2×(27 + n) > 16384
 ```
 求解这个式子得出的解是：`n > 8098`。也就是说如果一个列中存储的数据不大于`8098`个字节，那就不会发生`行溢出`，否则就会发生`行溢出`。不过这个`8098`个字节的结论只是针对只有一个列的`varchar_size_demo`表来说的，如果表中有多个列，那上面的式子和结论都需要改一改了，所以重点就是：<span style="color:violet">你不用关注这个临界点是什么，只要知道如果我们向一个行中存储了很大的数据时，可能发生`行溢出`的现象</span>。
@@ -485,12 +485,12 @@ Query OK, 1 row affected (0.00 sec)
 `Compressed`行格式和`Dynamic`不同的一点是，`Compressed`行格式会采用压缩算法对页面进行压缩，以节省空间。
 
 
-###  总结
+### 总结
 1. 页是`MySQL`中磁盘和内存交互的基本单位，也是`MySQL`是管理存储空间的基本单位。
 
 2. 指定和修改行格式的语法如下：
 
-    ```
+    ```sql
     CREATE TABLE 表名 (列的信息) ROW_FORMAT=行格式名称
     
     ALTER TABLE 表名 ROW_FORMAT=行格式名称
@@ -514,28 +514,3 @@ Query OK, 1 row affected (0.00 sec)
         另外，`Compressed`行格式会采用压缩算法对页面进行压缩。
     
 - 一个页一般是`16KB`，当记录中的数据太多，当前页放不下的时候，会把多余的数据存储到其他页中，这种现象称为`行溢出`。
-
-
-  (04-01.png): ../images/04-01.png
-  (04-02.png): ../images/04-02.png
-  (04-03.png): ../images/04-03.png
-  (04-04.png): ../images/04-04.png
-  (04-05.png): ../images/04-05.png
-  (04-06.png): ../images/04-06.png
-  (04-07.png): ../images/04-07.png
-  (04-08.png): ../images/04-08.png
-  (04-09.png): ../images/04-09.png
-  (04-10.png): ../images/04-10.png
-  (04-11.png): ../images/04-11.png
-  (04-12.png): ../images/04-12.png
-  (04-13.png): ../images/04-13.png
-  (04-14.png): ../images/04-14.png
-  (04-15.png): ../images/04-15.png
-  (04-16.png): ../images/04-16.png
-  (04-17.png): ../images/04-17.png
-  (04-18.png): ../images/04-18.png
-  (04-19.png): ../images/04-19.png
-  (04-20.png): ../images/04-20.png
-  
-<div STYLE="page-break-after: always;"></div>
-
