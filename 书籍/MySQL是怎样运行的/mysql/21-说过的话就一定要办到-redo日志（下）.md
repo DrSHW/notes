@@ -1,8 +1,8 @@
-# 第21章 说过的话就一定要办到-redo日志（下）
+##  第21章 说过的话就一定要办到-redo日志（下）
 
-## redo日志文件
+###  redo日志文件
 
-### redo日志刷盘时机
+#### redo日志刷盘时机
 我们前面说`mtr`运行过程中产生的一组`redo`日志在`mtr`结束时会被复制到`log buffer`中，可是这些日志总在内存里呆着也不是个办法，在一些情况下它们会被刷新到磁盘里，比如：
 
 - `log buffer`空间不足时
@@ -21,7 +21,7 @@
 - 做所谓的`checkpoint`时（我们现在没介绍过`checkpoint`的概念，稍后会仔细介绍，稍安勿躁）    
 - 其他的一些情况...
 
-### redo日志文件组
+#### redo日志文件组
 `MySQL`的数据目录（使用`SHOW VARIABLES LIKE 'datadir'`查看）下默认有两个名为`ib_logfile0`和`ib_logfile1`的文件，`log buffer`中的日志默认情况下就是刷新到这两个磁盘文件中。如果我们对默认的`redo`日志文件不满意，可以通过下面几个启动参数来调节：
 
 - `innodb_log_group_home_dir`
@@ -45,7 +45,7 @@
 小贴士：如果采用循环使用的方式向redo日志文件组里写数据的话，那岂不是要追尾，也就是后写入的redo日志覆盖掉前面写的redo日志？当然可能了！所以设计InnoDB的大佬提出了checkpoint的概念，稍后我们重点介绍～
 ```
 
-### redo日志文件格式
+#### redo日志文件格式
 我们前面说过`log buffer`本质上是一片连续的内存空间，被划分成了若干个`512`字节大小的`block`。<span style="color:violet">将log buffer中的redo日志刷新到磁盘的本质就是把block的镜像写入日志文件中</span>，所以`redo`日志文件其实也是由若干个`512`字节大小的block组成。
 
 `redo`日志文件组中的每个文件大小都一样，格式也一样，都是由两部分组成：
@@ -102,7 +102,7 @@
 
 - `checkpoint2`：结构和`checkpoint1`一样。
 
-## Log Sequeue Number
+###  Log Sequeue Number
 自系统开始运行，就不断的在修改页面，也就意味着会不断的生成`redo`日志。`redo`日志的量在不断的递增，就像人的年龄一样，自打出生起就不断递增，永远不可能缩减了。设计`InnoDB`的大佬为记录已经写入的`redo`日志量，设计了一个称之为`Log Sequeue Number`的全局变量，翻译过来就是：`日志序列号`，简称`lsn`。不过不像人一出生的年龄是`0`岁，设计`InnoDB`的大佬<span style="color:violet">规定</span>初始的`lsn`值为`8704`（也就是一条`redo`日志也没写入时，`lsn`的值为`8704`）。
 
 我们知道在向`log buffer`中写入`redo`日志时不是一条一条写入的，而是以一个`mtr`生成的一组`redo`日志为单位进行写入的。而且实际上是把日志内容写在了`log block body`处。但是在统计`lsn`的增长量时，是按照实际写入的日志量加上占用的`log block header`和`log block trailer`来计算的。我们来看一个例子：
@@ -128,7 +128,7 @@
 ```
 从上面的描述中可以看出来，<span style="color:violet">每一组由mtr生成的redo日志都有一个唯一的LSN值与其对应，LSN值越小，说明redo日志产生的越早</span>。
 
-### flushed_to_disk_lsn
+#### flushed_to_disk_lsn
 `redo`日志是首先写到`log buffer`中，之后才会被刷新到磁盘上的`redo`日志文件。所以设计`InnoDB`的大佬提出了一个称之为`buf_next_to_write`的全局变量，标记当前`log buffer`中已经有哪些日志被刷新到磁盘中了。画个图表示就是这样：
 
 ![](21-09.png)
@@ -155,14 +155,14 @@
 小贴士：应用程序向磁盘写入文件时其实是先写到操作系统的缓冲区中去，如果某个写入操作要等到操作系统确认已经写到磁盘时才返回，那需要调用一下操作系统提供的fsync函数。其实只有当系统执行了fsync函数后，flushed_to_disk_lsn的值才会跟着增长，当仅仅把log buffer中的日志写入到操作系统缓冲区却没有显式的刷新到磁盘时，另外的一个称之为write_lsn的值跟着增长。不过为了大家理解上的方便，我们在讲述时把flushed_to_disk_lsn和write_lsn的概念混淆了起来。
 ```
 
-### lsn值和redo日志文件偏移量的对应关系
+#### lsn值和redo日志文件偏移量的对应关系
 因为`lsn`的值是代表系统写入的`redo`日志量的一个总和，一个`mtr`中产生多少日志，`lsn`的值就增加多少（当然有时候要加上`log block header`和`log block trailer`的大小），这样`mtr`产生的日志写到磁盘中时，很容易计算某一个`lsn`值在`redo`日志文件组中的偏移量，如图：
 
 ![](21-12.png)
 
 初始时的`LSN`值是`8704`，对应文件偏移量`2048`，之后每个`mtr`向磁盘中写入多少字节日志，`lsn`的值就增长多少。
 
-### flush链表中的LSN
+#### flush链表中的LSN
 我们知道一个`mtr`代表一次对底层页面的原子访问，在访问过程中可能会产生一组不可分割的`redo`日志，在`mtr`结束时，会把这一组`redo`日志写入到`log buffer`中。除此之外，在`mtr`结束时还有一件非常重要的事情要做，就是<span style="color:violet">把在mtr执行过程中可能修改过的页面加入到Buffer Pool的flush链表</span>。为了防止大家早已忘记`flush链表`是什么，我们再看一下图：
 
 ![](21-13.png)
@@ -191,7 +191,7 @@
 
 总结一下上面说的，就是：<span style="color:violet">flush链表中的脏页按照修改发生的时间顺序进行排序，也就是按照oldest_modification代表的LSN值进行排序，被多次更新的页面不会重复插入到flush链表中，但是会更新newest_modification属性的值</span>。
 
-## checkpoint
+###  checkpoint
 有一个很不幸的事实就是我们的`redo`日志文件组容量是有限的，我们不得不选择循环使用`redo`日志文件组中的文件，但是这会造成最后写的`redo`日志与最开始写的`redo`日志`追尾`，这时应该想到：<span style="color:violet">redo日志只是为了系统奔溃后恢复脏页用的，如果对应的脏页已经刷新到了磁盘，也就是说即使现在系统奔溃，那么在重启后也用不着使用redo日志恢复该页面了，所以该redo日志也就没有存在的必要了，那么它占用的磁盘空间就可以被后续的redo日志所重用</span>。也就是说：<span style="color:violet">判断某些redo日志占用的磁盘空间是否可以覆盖的依据就是它对应的脏页是否已经刷新到磁盘里</span>。我们看一下前面一直介绍的那个例子：
 
 ![](21-17.png)
@@ -220,10 +220,10 @@
 
 ![](21-19.png)
 
-### 批量从flush链表中刷出脏页
+#### 批量从flush链表中刷出脏页
 我们在介绍`Buffer Pool`的时候说过，一般情况下都是后台的线程在对`LRU链表`和`flush链表`进行刷脏操作，这主要因为刷脏操作比较慢，不想影响用户线程处理请求。但是如果当前系统修改页面的操作十分频繁，这样就导致写日志操作十分频繁，系统`lsn`值增长过快。如果后台的刷脏操作不能将脏页刷出，那么系统无法及时做`checkpoint`，可能就需要用户线程同步的从`flush链表`中把那些最早修改的脏页（`oldest_modification`最小的脏页）刷新到磁盘，这样这些脏页对应的`redo`日志就没用了，然后就可以去做`checkpoint`了。
 
-### 查看系统中的各种LSN值
+#### 查看系统中的各种LSN值
 我们可以使用`SHOW ENGINE INNODB STATUS`命令查看当前`InnoDB`存储引擎中的各种`LSN`值的情况，比如：
 
 ```
@@ -247,7 +247,7 @@ Last checkpoint at  124052494
 - `Pages flushed up to`：代表`flush链表`中被最早修改的那个页面对应的`oldest_modification`属性值。
 - `Last checkpoint at`：当前系统的`checkpoint_lsn`值。
 
-## innodb_flush_log_at_trx_commit的用法
+###  innodb_flush_log_at_trx_commit的用法
 我们前面说为了保证事务的`持久性`，用户线程在事务提交时需要将该事务执行过程中产生的所有`redo`日志都刷新到磁盘上。这一条要求太狠了，会很明显的降低数据库性能。如果有的同学对事务的`持久性`要求不是那么强烈的话，可以选择修改一个称为`innodb_flush_log_at_trx_commit`的系统变量的值，该变量有3个可选的值：
 
 - `0`：当该系统变量值为0时，表示在事务提交时不立即向磁盘中同步`redo`日志，这个任务是交给后台线程做的。
@@ -259,22 +259,22 @@ Last checkpoint at  124052494
 
     这种情况下如果数据库挂了，操作系统没挂的话，事务的`持久性`还是可以保证的，但是操作系统也挂了的话，那就不能保证`持久性`了。
 
-## 崩溃恢复
+###  崩溃恢复
 在服务器不挂的情况下，`redo`日志简直就是个大累赘，不仅没用，反而让性能变得更差。但是万一，我说万一啊，万一数据库挂了，那`redo`日志可是个宝了，我们就可以在重启时根据`redo`日志中的记录就可以将页面恢复到系统奔溃前的状态。我们接下来大致看一下恢复过程是什么样。
 
-### 确定恢复的起点
+#### 确定恢复的起点
 我们前面说过，`checkpoint_lsn`之前的`redo`日志都可以被覆盖，也就是说这些`redo`日志对应的脏页都已经被刷新到磁盘中了，既然它们已经被刷盘，我们就没必要恢复它们了。对于`checkpoint_lsn`之后的`redo`日志，它们对应的脏页可能没被刷盘，也可能被刷盘了，我们不能确定，所以需要从`checkpoint_lsn`开始读取`redo`日志来恢复页面。
 
 当然，`redo`日志文件组的第一个文件的管理信息中有两个block都存储了`checkpoint_lsn`的信息，我们当然是要选取<span style="color:Red">最近发生的那次checkpoint的信息</span>。衡量`checkpoint`发生时间早晚的信息就是所谓的`checkpoint_no`，我们只要把`checkpoint1`和`checkpoint2`这两个block中的`checkpoint_no`值读出来比一下大小，哪个的`checkpoint_no`值更大，说明哪个block存储的就是最近的一次`checkpoint`信息。这样我们就能拿到最近发生的`checkpoint`对应的`checkpoint_lsn`值以及它在`redo`日志文件组中的偏移量`checkpoint_offset`。
 
-### 确定恢复的终点
+#### 确定恢复的终点
 `redo`日志恢复的起点确定了，那终点是哪个呢？这个还得从block的结构说起。我们说在写`redo`日志的时候都是顺序写的，写满了一个block之后会再往下一个block中写：
 
 ![](21-20.png)
 
 普通block的`log block header`部分有一个称之为`LOG_BLOCK_HDR_DATA_LEN`的属性，该属性值记录了当前block里使用了多少字节的空间。对于被填满的block来说，该值永远为`512`。如果该属性的值不为`512`，那么就是它了，它就是此次奔溃恢复中需要扫描的最后一个block。
 
-### 怎么恢复
+#### 怎么恢复
 确定了需要扫描哪些`redo`日志进行奔溃恢复之后，接下来就是怎么进行恢复了。假设现在的`redo`日志文件中有5条`redo`日志，如图：
 
 ![](21-21.png)
@@ -295,7 +295,7 @@ Last checkpoint at  124052494
     
     那在恢复时怎么知道某个`redo`日志对应的脏页是否在奔溃发生时已经刷新到磁盘了呢？这还得从页面的结构说起，我们前面说过每个页面都有一个称之为`File Header`的部分，在`File Header`里有一个称之为`FIL_PAGE_LSN`的属性，该属性记载了最近一次修改页面时对应的`lsn`值（其实就是页面控制块中的`newest_modification`值）。如果在做了某次`checkpoint`之后有脏页被刷新到磁盘中，那么该页对应的`FIL_PAGE_LSN`代表的`lsn`值肯定大于`checkpoint_lsn`的值，凡是符合这种情况的页面就不需要重复执行lsn值小于`FIL_PAGE_LSN`的redo日志了，所以更进一步提升了奔溃恢复的速度。
 
-## 遗漏的问题：LOG_BLOCK_HDR_NO是如何计算的
+###  遗漏的问题：LOG_BLOCK_HDR_NO是如何计算的
 我们前面说过，对于实际存储`redo`日志的普通的`log block`来说，在`log block header`处有一个称之为`LOG_BLOCK_HDR_NO`的属性（忘记了的话回头再看看），我们说这个属性代表一个唯一的标号。这个属性是初次使用该block时分配的，跟当时的系统`lsn`值有关。使用下面的公式计算该block的`LOG_BLOCK_HDR_NO`值：
 ```
 ((lsn / 512) & 0x3FFFFFFFUL) + 1

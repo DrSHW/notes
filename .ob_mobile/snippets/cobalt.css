@@ -2,7 +2,7 @@ body {
     --bg-color: #141d28;
     --side-bar-bg-color: #090b10;
     --control-text-color: #a9aaab;
-    --code-normal: #ccc;
+    --code-normal: #eee;
     --primary-color: #efb752;
     --primary-btn-border-color: #f0b752;
     --active-file-text-color: inherit;
@@ -22,7 +22,7 @@ body {
     --heading-char-color: #f0b752;
     --nav-item-color-active: #f0b752;
     --text-highlight-bg: #382ca3;
-    --caret-color: #fff;
+    --caret-color: #eee;
     --h1-color: #f79f2a;
     --h2-color: #f79f2a;
     --h3-color: rgb(250, 161, 195);
@@ -136,7 +136,7 @@ blockquote{
 /* Markdown 列表语法 */
 body{
     /* unorder Lists | 无序列表*/
-    --list-marker-color:  #ccc !important;
+    --list-marker-color:  #fff !important;
 }
 
 .markdown-rendered hr{
@@ -227,7 +227,7 @@ body{
     background-color: #6952b6;
     border-radius: 4px;
     font-weight: bold;
-    color: #ccc;
+    color: #eee;
     padding: 5px 7px 2px 7px;
     font-size: 0.9em;
     font-family: "Consolas", "LXGW WenKai GB Screen"
