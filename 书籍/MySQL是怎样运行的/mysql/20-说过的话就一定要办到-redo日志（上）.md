@@ -248,26 +248,3 @@
 ```
 小贴士：对照着上图，自己分析一下每个block的LOG_BLOCK_HDR_DATA_LEN、LOG_BLOCK_FIRST_REC_GROUP属性值都是什么～
 ```
-
-  (20-01.png): ../images/20-01.png
-  (20-02.png): ../images/20-02.png
-  (20-03.png): ../images/20-03.png
-  (20-04.png): ../images/20-04.png
-  (20-05.png): ../images/20-05.png
-  (20-06.png): ../images/20-06.png
-  (20-07.png): ../images/20-07.png
-  (20-08.png): ../images/20-08.png
-  (20-09.png): ../images/20-09.png
-  (20-10.png): ../images/20-10.png
-  (20-11.png): ../images/20-11.png
-  (20-12.png): ../images/20-12.png
-  (20-13.png): ../images/20-13.png
-  (20-14.png): ../images/20-14.png
-  (20-15.png): ../images/20-15.png
-  (20-16.png): ../images/20-16.png
-  (20-17.png): ../images/20-17.png
-  (20-18.png): ../images/20-18.png
-  (20-19.png): ../images/20-19.png
-
-<div STYLE="page-break-after: always;"></div>
-

@@ -391,29 +391,3 @@ Too many active concurrent transactions
 比如我们在系统初始化时指定的`innodb_rollback_segments`为`35`，`innodb_undo_tablespaces`为`2`，这样就会将第`33`、`34`号回滚段分别分布到一个`undo表空间`中。
 
 设立`undo表空间`的一个好处就是在`undo表空间`中的文件大到一定程度时，可以自动的将该`undo表空间`截断（truncate）成一个小文件。而系统表空间的大小只能不断的增大，却不能截断。
-
-  (23-01.png): ../images/23-01.png
-  (23-02.png): ../images/23-02.png
-  (23-03.png): ../images/23-03.png
-  (23-04.png): ../images/23-04.png
-  (23-05.png): ../images/23-05.png
-  (23-06.png): ../images/23-06.png
-  (23-07.png): ../images/23-07.png
-  (23-08.png): ../images/23-08.png
-  (23-09.png): ../images/23-09.png
-  (23-10.png): ../images/23-10.png
-  (23-11.png): ../images/23-11.png
-  (23-12.png): ../images/23-12.png
-  (23-13.png): ../images/23-13.png
-  (23-14.png): ../images/23-14.png
-  (23-15.png): ../images/23-15.png
-  (23-16.png): ../images/23-16.png
-  (23-17.png): ../images/23-17.png
-  (23-18.png): ../images/23-18.png
-  (23-19.png): ../images/23-19.png
-  (23-20.png): ../images/23-20.png
-  (23-21.png): ../images/23-21.png
-  (23-22.png): ../images/23-22.png
-  
-<div STYLE="page-break-after: always;"></div>
-

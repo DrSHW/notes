@@ -19,7 +19,7 @@
 
 #### 准备工作
 为了故事的顺利发展，我们还得把之前用到的`single_table`表搬来，怕大家忘了这个表长什么样，再给大家抄一遍：
-```
+```mysql
 CREATE TABLE single_table (
     id INT NOT NULL AUTO_INCREMENT,
     key1 VARCHAR(100),
@@ -46,7 +46,7 @@ CREATE TABLE single_table (
 4. 对比各种执行方案的代价，找出成本最低的那一个
 
 下面我们就以一个实例来分析一下这些步骤，单表查询语句如下：
-```
+```mysql
 SELECT * FROM single_table WHERE 
     key1 IN ('a', 'b', 'c') AND 
     key2 > 10 AND key2 < 1000 AND 
@@ -75,7 +75,7 @@ SELECT * FROM single_table WHERE
 
 这两个信息从哪来呢？设计`MySQL`的大佬为每个表维护了一系列的`统计信息`，关于这些统计信息是如何收集起来的我们放在本章后边详细介绍，现在看看怎么查看这些统计信息。设计`MySQL`的大佬给我们提供了`SHOW TABLE STATUS`语句来查看表的统计信息，如果要看指定的某个表的统计信息，在该语句后加对应的`LIKE`语句就好了，比方说我们要查看`single_table`这个表的统计信息可以这么写：
 
-```
+```mysql
 mysql> USE xiaohaizi;
 Database changed
 
@@ -111,13 +111,13 @@ Max_data_length: 0
 
     本选项表示表占用的存储空间字节数。使用`MyISAM`存储引擎的表来说，该值就是数据文件的大小，对于使用`InnoDB`存储引擎的表来说，该值就相当于聚簇索引占用的存储空间大小，也就是说可以这样计算该值的大小：
     
-    ```
+    ```mysql
     Data_length = 聚簇索引的页面数量 x 每个页面的大小
     ```
     
     我们的`single_table`使用默认`16KB`的页面大小，而上面查询结果显示`Data_length`的值是`1589248`，所以我们可以反向来推导出`聚簇索引的页面数量`：
     
-    ```
+    ```mysql
     聚簇索引的页面数量 = 1589248 ÷ 16 ÷ 1024 = 97
     ```
 
@@ -340,7 +340,7 @@ Max_data_length: 0
 
 #### 基于索引统计数据的成本计算
 有时候使用索引执行查询时会有许多单点区间，比如使用`IN`语句就很容易产生非常多的单点区间，比如下面这个查询（下面查询语句中的`...`表示还有很多参数）：
-```
+```mysql
 SELECT * FROM single_table WHERE key1 IN ('aa1', 'aa2', 'aa3', ... , 'zzz');
 ```
 很显然，这个查询可能使用到的索引就是`idx_key1`，由于这个索引并不是唯一二级索引，所以并不能确定一个单点区间对应的二级索引记录的条数有多少，需要我们去计算。计算方式我们上面已经介绍过了，就是先获取索引对应的`B+`树的`区间最左记录`和`区间最右记录`，然后再计算这两条记录之间有多少记录（记录条数少的时候可以做到精确计算，多的时候只能估算）。设计`MySQL`的大佬把这种通过直接访问索引对应的`B+`树来计算某个范围区间对应的索引记录条数的方式称之为`index dive`。
@@ -348,7 +348,7 @@ SELECT * FROM single_table WHERE key1 IN ('aa1', 'aa2', 'aa3', ... , 'zzz');
 小贴士：dive直译为中文的意思是跳水、俯冲的意思，原谅我的英文水平捉急，我实在不知道怎么翻译 index dive，索引跳水？索引俯冲？好像都不太合适，所以压根儿就不翻译了。不过大家要意会index dive就是直接利用索引对应的B+树来计算某个范围区间对应的记录条数。
 ```
 有零星几个单点区间的话，使用`index dive`的方式去计算这些单点区间对应的记录数也不是什么问题，可是你架不住有的孩子憋足了劲往`IN`语句里塞东西呀，我就见过有的同学写的`IN`语句里有20000个参数的🤣🤣，这就意味着`MySQL`的查询优化器为了计算这些单点区间对应的索引记录条数，要进行20000次`index dive`操作，这性能损耗可就大了，搞不好计算这些单点区间对应的索引记录条数的成本比直接全表扫描的成本都大了。设计`MySQL`的大佬们多聪明啊，他们当然考虑到了这种情况，所以提供了一个系统变量`eq_range_index_dive_limit`，我们看一下在`MySQL 5.7.21`中这个系统变量的默认值：
-```
+```mysql
 mysql> SHOW VARIABLES LIKE '%dive%';
 +---------------------------+-------+
 | Variable_name             | Value |
@@ -361,7 +361,7 @@ mysql> SHOW VARIABLES LIKE '%dive%';
 
 像会为每个表维护一份统计数据一样，`MySQL`也会为表中的每一个索引维护一份统计数据，查看某个表中索引的统计数据可以使用`SHOW INDEX FROM 表名`的语法，比如我们查看一下`single_table`的各个索引的统计数据可以这么写：
 
-```
+```mysql
 mysql> SHOW INDEX FROM single_table;
 +--------------+------------+--------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
 | Table        | Non_unique | Key_name     | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
@@ -415,7 +415,7 @@ mysql> SHOW INDEX FROM single_table;
 9693 ÷ 968 ≈ 10（条）
 ```
 此时再看上面那条查询语句：
-```
+```mysql
 SELECT * FROM single_table WHERE key1 IN ('aa1', 'aa2', 'aa3', ... , 'zzz');
 ```
 假设`IN`语句中有20000个参数的话，就直接使用统计数据来估算这些参数需要单点区间对应的记录条数了，每个参数大约对应`10`条记录，所以总共需要回表的记录数就是：
@@ -441,7 +441,7 @@ SELECT * FROM single_table WHERE key1 IN ('aa1', 'aa2', 'aa3', ... , 'zzz');
 
 - 查询一：
     
-    ```
+    ```mysql
     SELECT * FROM single_table AS s1 INNER JOIN single_table2 AS s2;
     ```
     
@@ -449,7 +449,7 @@ SELECT * FROM single_table WHERE key1 IN ('aa1', 'aa2', 'aa3', ... , 'zzz');
     
 - 查询二：
 
-    ```
+    ```mysql
     SELECT * FROM single_table AS s1 INNER JOIN single_table2 AS s2 
     WHERE s1.key2 >10 AND s1.key2 < 1000;
     ```
@@ -460,7 +460,7 @@ SELECT * FROM single_table WHERE key1 IN ('aa1', 'aa2', 'aa3', ... , 'zzz');
 
 - 查询三：
  
-    ```
+    ```mysql
     SELECT * FROM single_table AS s1 INNER JOIN single_table2 AS s2 
         WHERE s1.common_field > 'xyz';
     ```
@@ -469,7 +469,7 @@ SELECT * FROM single_table WHERE key1 IN ('aa1', 'aa2', 'aa3', ... , 'zzz');
 
 - 查询四：
  
-    ```
+    ```mysql
     SELECT * FROM single_table AS s1 INNER JOIN single_table2 AS s2 
         WHERE s1.key2 > 10 AND s1.key2 < 1000 AND
               s1.common_field > 'xyz';
@@ -478,7 +478,7 @@ SELECT * FROM single_table WHERE key1 IN ('aa1', 'aa2', 'aa3', ... , 'zzz');
     
 - 查询五：
  
-    ```
+    ```mysql
     SELECT * FROM single_table AS s1 INNER JOIN single_table2 AS s2 
         WHERE s1.key2 > 10 AND s1.key2 < 1000 AND
               s1.key1 IN ('a', 'b', 'c') AND
@@ -522,7 +522,7 @@ SELECT * FROM single_table WHERE key1 IN ('aa1', 'aa2', 'aa3', ... , 'zzz');
 小贴士：左（外）连接和右（外）连接查询在某些特殊情况下可以被优化为内连接查询，我们在之后的章节中会仔细介绍的，稍安勿躁。
 ```
 比如对于下面这个查询来说：
-```
+```mysql
 SELECT * FROM single_table AS s1 INNER JOIN single_table2 AS s2 
     ON s1.key1 = s2.common_field 
     WHERE s1.key2 > 10 AND s1.key2 < 1000 AND 
@@ -626,7 +626,7 @@ SELECT * FROM single_table AS s1 INNER JOIN single_table2 AS s2
 - 检测一条记录是否符合搜索条件的成本默认是`0.2`
 
 其实除了这两个成本常数，`MySQL`还支持好多呢，它们被存储到了`mysql`数据库（这是一个系统数据库，我们之前介绍过）的两个表中：
-```
+```mysql
 mysql> SHOW TABLES FROM mysql LIKE '%cost%';
 +--------------------------+
 | Tables_in_mysql (%cost%) |
@@ -646,7 +646,7 @@ mysql> SHOW TABLES FROM mysql LIKE '%cost%';
 
 #### mysql.server_cost表
 `server_cost`表中在`server`层进行的一些操作对应的`成本常数`，具体内容如下：
-```
+```mysql
 mysql> SELECT * FROM mysql.server_cost;
 +------------------------------+------------+---------------------+---------+
 | cost_name                    | cost_value | last_update         | comment |
@@ -686,7 +686,7 @@ mysql> SELECT * FROM mysql.server_cost;
 
     比方说我们想把检测一条记录是否符合搜索条件的成本增大到`0.4`，那么就可以这样写更新语句：
     
-    ```
+    ```mysql
     UPDATE mysql.server_cost 
         SET cost_value = 0.4
         WHERE cost_name = 'row_evaluate_cost';
@@ -695,7 +695,7 @@ mysql> SELECT * FROM mysql.server_cost;
 - 让系统重新加载这个表的值。
     
     使用下面语句即可：
-    ```
+    ```mysql
     FLUSH OPTIMIZER_COSTS;
     ```
 
@@ -703,7 +703,7 @@ mysql> SELECT * FROM mysql.server_cost;
 
 #### mysql.engine_cost表
 `engine_cost表`表中在存储引擎层进行的一些操作对应的`成本常数`，具体内容如下：
-```
+```mysql
 mysql> SELECT * FROM mysql.engine_cost;
 +-------------+-------------+------------------------+------------+---------------------+---------+
 | engine_name | device_type | cost_name              | cost_value | last_update         | comment |
@@ -733,7 +733,7 @@ mysql> SELECT * FROM mysql.engine_cost;
 
     比如我们想增大`InnoDB`存储引擎页面`I/O`的成本，书写正常的插入语句即可：
     
-    ```
+    ```mysql
     INSERT INTO mysql.engine_cost
         VALUES ('InnoDB', 0, 'io_block_read_cost', 2.0,
         CURRENT_TIMESTAMP, 'increase Innodb I/O cost');
@@ -741,7 +741,7 @@ mysql> SELECT * FROM mysql.engine_cost;
 - 让系统重新加载这个表的值。
     
     使用下面语句即可：
-    ```
+    ```mysql
     FLUSH OPTIMIZER_COSTS;
     ```
 

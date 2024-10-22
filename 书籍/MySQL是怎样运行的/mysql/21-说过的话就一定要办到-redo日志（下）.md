@@ -67,37 +67,36 @@
     ![](21-04.png)
     
     各个属性的具体释义如下：
+
+| 属性名                    | 长度（单位：字节） | 描述                                                                                                                       |
+| ---------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `LOG_HEADER_FORMAT`    | `4`       | `redo`日志的版本，在MySQL 5.7.21中该值永远为1                                                                                         |
+| `LOG_HEADER_PAD1`      | `4`       | 做字节填充用的，没什么实际意义，忽略～                                                                                                      |
+| `LOG_HEADER_START_LSN` | `8`       | 标记本 `redo` 日志文件开始的 `LSN` 值，也就是文件偏移量为 2048 字节初对应的 `LSN` 值（关于什么是 `LSN` 我们稍后再看，看不懂的先忽略）。                                    |
+| `LOG_HEADER_CREATOR`   | `32`      | 一个字符串，标记本 `redo` 日志文件的创建者是谁。正常运行时该值为 MySQL 的版本号，比如："MySQL 5.7.21"，使用 `mysqlbackup` 创建的 `redo` 日志文件的该值为 "ibbackup" 和创建时间。 |
+| `LOG_BLOCK_CHECKSUM`   | `4`       | 本`block`的校验值，所有`block`都有，我们不关心                                                                                           |
+```
+小贴士：设计InnoDB的大佬对redo日志的block格式做了很多次修改，如果你阅读的其他书籍中发现上述的属性和你阅读书籍中的属性有些出入，不要慌，正常现象，忘记以前的版本吧。另外，LSN值我们后边才会介绍，现在千万别纠结LSN是什么。
+```
     
-    |         属性名         | 长度（单位：字节） | 描述                                                                                                                                                                             |
-    | :--------------------: | :----------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-    |  `LOG_HEADER_FORMAT`   |        `4`         | `redo`日志的版本，在`MySQL 5.7.21`中该值永远为1                                                                                                                                  |
-    |   `LOG_HEADER_PAD1`    |        `4`         | 做字节填充用的，没什么实际意义，忽略～                                                                                                                                           |
-    | `LOG_HEADER_START_LSN` |        `8`         | 标记本`redo`日志文件开始的LSN值，也就是文件偏移量为2048字节初对应的LSN值（关于什么是LSN我们稍后再看，看不懂的先忽略）。                                                          |
-    |  `LOG_HEADER_CREATOR`  |        `32`        | 一个字符串，标记本`redo`日志文件的创建者是谁。正常运行时该值为`MySQL`的版本号，比如：`"MySQL 5.7.21"`，使用`mysqlbackup`命令创建的`redo`日志文件的该值为`"ibbackup"`和创建时间。 |
-    |  `LOG_BLOCK_CHECKSUM`  |        `4`         | 本block的校验值，所有block都有，我们不关心                                                                                                                                       |
-    
-    ```
-    小贴士：设计InnoDB的大佬对redo日志的block格式做了很多次修改，如果你阅读的其他书籍中发现上述的属性和你阅读书籍中的属性有些出入，不要慌，正常现象，忘记以前的版本吧。另外，LSN值我们后边才会介绍，现在千万别纠结LSN是什么。
-    ```
     
 - `checkpoint1`：记录关于`checkpoint`的一些属性，看一下它的结构：
 
     ![](21-05.png)
 
     各个属性的具体释义如下：
-    
-    |            属性名             | 长度（单位：字节） | 描述                                                                  |
-    | :---------------------------: | :----------------: | :-------------------------------------------------------------------- |
-    |      `LOG_CHECKPOINT_NO`      |        `8`         | 服务器做`checkpoint`的编号，每做一次`checkpoint`，该值就加1。         |
-    |     `LOG_CHECKPOINT_LSN`      |        `8`         | 服务器做`checkpoint`结束时对应的`LSN`值，系统奔溃恢复时将从该值开始。 |
-    |    `LOG_CHECKPOINT_OFFSET`    |        `8`         | 上个属性中的`LSN`值在`redo`日志文件组中的偏移量                       |
-    | `LOG_CHECKPOINT_LOG_BUF_SIZE` |        `8`         | 服务器在做`checkpoint`操作时对应的`log buffer`的大小                  |
-    |     `LOG_BLOCK_CHECKSUM`      |        `4`         | 本block的校验值，所有block都有，我们不关心                            |
 
-    ```
+| 属性名                           | 长度（单位：字节） | 描述                                              |
+| ----------------------------- | --------- | ----------------------------------------------- |
+| `LOG_CHECKPOINT_NO`           | `8`       | 服务器做 `checkpoint` 的编号，每做一次 `checkpoint`，该值就加 1。 |
+| `LOG_CHECKPOINT_LSN`          | `8`       | 服务器做 `checkpoint` 结束时对应的 LSN 值，系统奔溃恢复时将从该值开始。   |
+| `LOG_CHECKPOINT_OFFSET`       | `8`       | 上个属性中的 LSN 值在 `redo` 日志文件组中的偏移量                 |
+| `LOG_CHECKPOINT_LOG_BUF_SIZE` | `8`       | 服务器在做 `checkpoint`操作时对应的 log buffer 的大小         |
+| `LOG_BLOCK_CHECKSUM`          | `4`       | 本 `block` 的校验值，所有 `block` 都有，我们不关心              |
+
+```
     小贴士：现在看不懂上面这些关于checkpoint和LSN的属性的释义是很正常的，我就是想让大家对上面这些属性混个脸熟，后边我们后详细介绍的。
-    ```
-
+```
 - 第三个block未使用，忽略～
 
 - `checkpoint2`：结构和`checkpoint1`一样。
@@ -226,7 +225,7 @@
 #### 查看系统中的各种LSN值
 我们可以使用`SHOW ENGINE INNODB STATUS`命令查看当前`InnoDB`存储引擎中的各种`LSN`值的情况，比如：
 
-```
+```mysql
 mysql> SHOW ENGINE INNODB STATUS\G
 
 (...省略前面的许多状态)
@@ -297,7 +296,7 @@ Last checkpoint at  124052494
 
 ### 遗漏的问题：LOG_BLOCK_HDR_NO是如何计算的
 我们前面说过，对于实际存储`redo`日志的普通的`log block`来说，在`log block header`处有一个称之为`LOG_BLOCK_HDR_NO`的属性（忘记了的话回头再看看），我们说这个属性代表一个唯一的标号。这个属性是初次使用该block时分配的，跟当时的系统`lsn`值有关。使用下面的公式计算该block的`LOG_BLOCK_HDR_NO`值：
-```
+```mysql
 ((lsn / 512) & 0x3FFFFFFFUL) + 1
 ```
 这个公式里的`0x3FFFFFFFUL`可能让大家有点困惑，其实它的二进制表示可能更亲切一点：
@@ -307,30 +306,3 @@ Last checkpoint at  124052494
 从图中可以看出，`0x3FFFFFFFUL`对应的二进制数的前2位为0，后30位的值都为`1`。我们刚开始学计算机的时候就学过，一个二进制位与0做与运算（`&`）的结果肯定是0，一个二进制位与1做与运算（`&`）的结果就是原值。让一个数和`0x3FFFFFFFUL`做与运算的意思就是要将该值的前2个比特位的值置为0，这样该值就肯定小于或等于`0x3FFFFFFFUL`了。这也就说明了，不论lsn多大，`((lsn / 512) & 0x3FFFFFFFUL)`的值肯定在`0`\~`0x3FFFFFFFUL`之间，再加1的话肯定在`1`\~`0x40000000UL`之间。而`0x40000000UL`这个值大家应该很熟悉，这个值就代表着`1GB`。也就是说系统最多能产生不重复的`LOG_BLOCK_HDR_NO`值只有`1GB`个。设计InnoDB的大佬规定`redo`日志文件组中包含的所有文件大小总和不得超过512GB，一个block大小是512字节，也就是说redo日志文件组中包含的block块最多为1GB个，所以有1GB个不重复的编号值也就够用了。
 
 另外，`LOG_BLOCK_HDR_NO`值的第一个比特位比较特殊，称之为`flush bit`，如果该值为1，代表着本block是在某次将`log buffer`中的block刷新到磁盘的操作中的第一个被刷入的block。
-
-  (21-01.png): ../images/21-01.png
-  (21-02.png): ../images/21-02.png
-  (21-03.png): ../images/21-03.png
-  (21-04.png): ../images/21-04.png
-  (21-05.png): ../images/21-05.png
-  (21-06.png): ../images/21-06.png
-  (21-07.png): ../images/21-07.png
-  (21-08.png): ../images/21-08.png
-  (21-09.png): ../images/21-09.png
-  (21-10.png): ../images/21-10.png
-  (21-11.png): ../images/21-11.png
-  (21-12.png): ../images/21-12.png
-  (21-13.png): ../images/21-13.png
-  (21-14.png): ../images/21-14.png
-  (21-15.png): ../images/21-15.png
-  (21-16.png): ../images/21-16.png
-  (21-17.png): ../images/21-17.png
-  (21-18.png): ../images/21-18.png
-  (21-19.png): ../images/21-19.png
-  (21-20.png): ../images/21-20.png
-  (21-21.png): ../images/21-21.png
-  (21-22.png): ../images/21-22.png
-  (21-23.png): ../images/21-23.png
-
-<div STYLE="page-break-after: always;"></div>
-

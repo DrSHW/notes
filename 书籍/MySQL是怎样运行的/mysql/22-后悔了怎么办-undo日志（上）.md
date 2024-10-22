@@ -63,7 +63,7 @@
 为了实现事务的`原子性`，`InnoDB`存储引擎在实际进行增、删、改一条记录时，都需要<span style="color:violet">先</span>把对应的`undo日志`记下来。一般每对一条记录做一次改动，就对应着一条`undo日志`，但在某些更新记录的操作中，也可能会对应着2条`undo日志`，这个我们后边会仔细介绍。一个事务在执行过程中可能新增、删除、更新若干条记录，也就是说需要记录很多条对应的`undo日志`，这些`undo日志`会被从`0`开始编号，也就是说根据生成的顺序分别被称为`第0号undo日志`、`第1号undo日志`、...、`第n号undo日志`等，这个编号也被称之为`undo no`。
 
 这些`undo日志`是被记录到类型为`FIL_PAGE_UNDO_LOG`（对应的十六进制是`0x0002`，忘记了页面类型是什么的同学需要回过头再看看前面的章节）的页面中。这些页面可以从系统表空间中分配，也可以从一种专门存放`undo日志`的表空间，也就是所谓的`undo tablespace`中分配。不过关于如何分配存储`undo日志`的页面这个事情我们稍后再说，现在先来看看不同操作都会产生什么样子的`undo日志`吧～ 为了故事的顺利发展，我们先来创建一个名为`undo_demo`的表：
-```
+```mysql
 CREATE TABLE undo_demo (
     id INT NOT NULL,
     key1 VARCHAR(100),
@@ -73,7 +73,7 @@ CREATE TABLE undo_demo (
 )Engine=InnoDB CHARSET=utf8;
 ```
 这个表中有3个列，其中`id`列是主键，我们为`key1`列建立了一个二级索引，`col`列是一个普通的列。我们前面介绍`InnoDB`的数据字典时说过，每个表都会被分配一个唯一的`table id`，我们可以通过系统数据库`information_schema`中的`innodb_sys_tables`表来查看某个表对应的`table id`是什么，现在我们查看一下`undo_demo`对应的`table id`是多少：
-```
+```mysql
 mysql> SELECT * FROM information_schema.innodb_sys_tables WHERE name = 'xiaohaizi/undo_demo';
 +----------+---------------------+------+--------+-------+-------------+------------+---------------+------------+
 | TABLE_ID | NAME                | FLAG | N_COLS | SPACE | FILE_FORMAT | ROW_FORMAT | ZIP_PAGE_SIZE | SPACE_TYPE |
@@ -97,7 +97,7 @@ mysql> SELECT * FROM information_schema.innodb_sys_tables WHERE name = 'xiaohaiz
 小贴士：当我们向某个表中插入一条记录时，实际上需要向聚簇索引和所有的二级索引都插入一条记录。不过记录undo日志时，我们只需要考虑向聚簇索引插入记录时的情况就好了，因为其实聚簇索引记录和二级索引记录是一一对应的，我们在回滚插入操作时，只需要知道这条记录的主键信息，然后根据主键信息做对应的删除操作，做删除操作时就会顺带着把所有二级索引中相应的记录也删除掉。后边说到的DELETE操作和UPDATE操作对应的undo日志也都是针对聚簇索引记录而言的，我们之后就不强调了。
 ```
 现在我们向`undo_demo`中插入两条记录：
-```
+```mysql
 BEGIN;  # 显式开启一个事务，假设该事务的id为100
 
 # 插入两条记录
@@ -171,7 +171,7 @@ INSERT INTO undo_demo(id, key1, col)
 - 与类型为`TRX_UNDO_INSERT_REC`的`undo日志`不同，类型为`TRX_UNDO_DEL_MARK_REC`的`undo`日志还多了一个`索引列各列信息`的内容，也就是说如果某个列被包含在某个索引中，那么它的相关信息就应该被记录到这个`索引列各列信息`部分，所谓的相关信息包括该列在记录中的位置（用`pos`表示），该列占用的存储空间大小（用`len`表示），该列实际值（用`value`表示）。所以`索引列各列信息`存储的内容实质上就是`<pos, len, value>`的一个列表。这部分信息主要是用在事务提交后，对该`中间状态记录`做真正删除的阶段二，也就是`purge`阶段中使用的，具体如何使用现在我们可以忽略～
 
 该介绍的我们介绍完了，现在继续在上面那个事务id为`100`的事务中删除一条记录，比如我们把`id`为1的那条记录删除掉：
-```
+```mysql
 BEGIN;  # 显式开启一个事务，假设该事务的id为100
 
 # 插入两条记录
@@ -229,14 +229,14 @@ DELETE FROM undo_demo WHERE id = 1;
     ![](22-14.png)        
 
     假如我们有这样的`UPDATE`语句：
-    ```
+    ```mysql
     UPDATE undo_demo 
         SET key1 = 'P92', col = '手枪' 
         WHERE id = 2;
     ```
     在这个`UPDATE`语句中，`col`列从`步枪`被更新为`手枪`，前后都占用6个字节，也就是占用的存储空间大小未改变；`key1`列从`M416`被更新为`P92`，也就是从`4`个字节被更新为`3`个字节，这就不满足`就地更新`需要的条件了，所以不能进行`就地更新`。但是如果`UPDATE`语句长这样：
     
-    ```
+    ```mysql
     UPDATE undo_demo 
         SET key1 = 'M249', col = '机枪' 
         WHERE id = 2;
@@ -262,7 +262,7 @@ DELETE FROM undo_demo WHERE id = 1;
 - 如果在`UPDATE`语句中更新的列包含索引列，那么也会添加`索引列各列信息`这个部分，否则的话是不会添加这个部分的。
 
 现在继续在上面那个事务id为100的事务中更新一条记录，比如我们把id为2的那条记录更新一下：
-```
+```mysql
 BEGIN;  # 显式开启一个事务，假设该事务的id为100
 
 # 插入两条记录
@@ -306,23 +306,3 @@ UPDATE undo_demo
 ```
 小贴士：其实还有一种称为TRX_UNDO_UPD_DEL_REC的undo日志的类型我们没有介绍，主要是想避免引入过多的复杂度，如果大家对这种类型的undo日志的使用感兴趣的话，可以额外查一下别的资料。
 ```
-
-  (22-01.png): ../images/22-01.png
-  (22-02.png): ../images/22-02.png
-  (22-03.png): ../images/22-03.png
-  (22-04.png): ../images/22-04.png
-  (22-05.png): ../images/22-05.png
-  (22-06.png): ../images/22-06.png
-  (22-07.png): ../images/22-07.png
-  (22-08.png): ../images/22-08.png
-  (22-09.png): ../images/22-09.png
-  (22-10.png): ../images/22-10.png
-  (22-11.png): ../images/22-11.png
-  (22-12.png): ../images/22-12.png
-  (22-13.png): ../images/22-13.png
-  (22-14.png): ../images/22-14.png
-  (22-15.png): ../images/22-15.png
-  (22-16.png): ../images/22-16.png
-  
-<div STYLE="page-break-after: always;"></div>
-

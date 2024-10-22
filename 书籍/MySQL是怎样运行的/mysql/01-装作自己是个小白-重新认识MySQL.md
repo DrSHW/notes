@@ -90,8 +90,7 @@ C:\Program Files\MySQL\MySQL Server 5.7
     方便多了～
     
 ```
-小贴士：关于什么是环境变量以及如何在当前系统中添加或修改系统变量不是我们介绍的范围，大家找本相关的书或者上网查一查～
-```
+小贴士：关于什么是环境变量以及如何在当前系统中添加或修改系统变量不是我们介绍的范围，大家找本相关的书或者上网查一查～## 
     
 ### 启动MySQL服务器程序
 
@@ -194,7 +193,7 @@ mysql>
     3. `\q`
 
 比如我们输入`quit`试试：
-```
+```mysql
 mysql> quit
 Bye
 ```
@@ -210,7 +209,7 @@ Bye
     mysql -hlocahhost -uroot -p
     ```
     点击回车之后才会提示你输入密码：
-    ```
+    ```mysql
     Enter password:
     ```
     不过这回你输入的密码不会被显示出来，心怀不轨的人也就看不到了，输入完成点击回车就成功连接到了服务器。
@@ -386,11 +385,11 @@ mysql -hlocalhost -uroot --socket=/tmp/a.txt -p
 
 #### 查看当前服务器程序支持的存储引擎
 我们可以用下面这个命令来查看当前服务器程序支持的存储引擎：
-```sql
+```mysql
 SHOW ENGINES;
 ```
 来看一下调用效果：
-```sql
+```mysql
 mysql> SHOW ENGINES;
 +--------------------+---------+----------------------------------------------------------------+--------------+------+------------+
 | Engine             | Support | Comment                                                        | Transactions | XA   | Savepoints |
@@ -419,13 +418,13 @@ mysql>
 
 ##### 创建表时指定存储引擎
 我们之前创建表的语句都没有指定表的存储引擎，那就会使用默认的存储引擎`InnoDB`（当然这个默认的存储引擎也是可以修改的，我们在后边的章节中再说怎么改）。如果我们想显式的指定一下表的存储引擎，那可以这么写：
-```sql
+```mysql
 CREATE TABLE 表名(
     建表语句;
 ) ENGINE = 存储引擎名称;
 ```
 比如我们想创建一个存储引擎为`MyISAM`的表可以这么写：
-```sql
+```mysql
 mysql> CREATE TABLE engine_demo_table(
     ->     i int
     -> ) ENGINE = MyISAM;
@@ -436,11 +435,11 @@ mysql>
 
 ##### 修改表的存储引擎
 如果表已经建好了，我们也可以使用下面这个语句来修改表的存储引擎：
-```sql
+```mysql
 ALTER TABLE 表名 ENGINE = 存储引擎名称;
 ```
 比如我们修改一下`engine_demo_table`表的存储引擎：
-```sql
+```mysql
 mysql> ALTER TABLE engine_demo_table ENGINE = InnoDB;
 Query OK, 0 rows affected (0.05 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -448,7 +447,7 @@ Records: 0  Duplicates: 0  Warnings: 0
 mysql>
 ```
 这时我们再查看一下`engine_demo_table`的表结构：
-```sql
+```mysql
 mysql> SHOW CREATE TABLE engine_demo_table\G
 *************************** 1. row ***************************
        Table: engine_demo_table
