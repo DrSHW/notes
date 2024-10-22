@@ -104,7 +104,7 @@ innodb_buffer_pool_size = 268435456
 ![](18-04.png)
 
 大家要特别注意一个事儿：<span style="color:violet">我们是按照某个比例将LRU链表分成两半的，不是某些节点固定是young区域的，某些节点固定是old区域的，随着程序的运行，某个节点所属的区域也可能发生变化</span>。那这个划分成两截的比例怎么确定呢？对于`InnoDB`存储引擎来说，我们可以通过查看系统变量`innodb_old_blocks_pct`的值来确定`old`区域在`LRU链表`中所占的比例，比方说这样：
-```mysql
+```sql
 mysql> SHOW VARIABLES LIKE 'innodb_old_blocks_pct';
 +-----------------------+-------+
 | Variable_name         | Value |
@@ -119,7 +119,7 @@ mysql> SHOW VARIABLES LIKE 'innodb_old_blocks_pct';
 innodb_old_blocks_pct = 40
 ```
 这样我们在启动服务器后，`old`区域占`LRU链表`的比例就是`40%`。当然，如果在服务器运行期间，我们也可以修改这个系统变量的值，不过需要注意的是，这个系统变量属于`全局变量`，一经修改，会对所有客户端生效，所以我们只能这样修改：
-```mysql
+```sql
 SET GLOBAL innodb_old_blocks_pct = 40;
 ```
 
@@ -135,7 +135,7 @@ SET GLOBAL innodb_old_blocks_pct = 40;
     
     咋办？全表扫描有一个特点，那就是它的执行频率非常低，谁也不会没事儿老在那写全表扫描的语句玩，而且在执行全表扫描的过程中，即使某个页面中有很多条记录，也就是去多次访问这个页面所花费的时间也是非常少的。所以我们只需要规定，<span style="color:violet">在对某个处在`old`区域的缓存页进行第一次访问时就在它对应的控制块中记录下来这个访问时间，如果后续的访问时间与第一次访问的时间在某个时间间隔内，那么该页面就不会被从old区域移动到young区域的头部，否则将它移动到young区域的头部</span>。上述的这个间隔时间是由系统变量`innodb_old_blocks_time`控制的，你看：
 
-```mysql
+```sql
 mysql> SHOW VARIABLES LIKE 'innodb_old_blocks_time';
 +------------------------+-------+
 | Variable_name          | Value |
@@ -223,7 +223,7 @@ innodb_buffer_pool_size/innodb_buffer_pool_instances
     ```
     默认的`innodb_buffer_pool_chunk_size`值是`128M`，指定的`innodb_buffer_pool_instances`的值是`16`，所以`innodb_buffer_pool_size`的值必须是`2G`或者`2G`的整数倍，上面例子中指定的`innodb_buffer_pool_size`的值是`8G`，符合规定，所以在服务器启动完成之后我们查看一下该变量的值就是我们指定的`8G`（8589934592字节）：
     
-    ```mysql
+    ```sql
     mysql> show variables like 'innodb_buffer_pool_size';
     +-------------------------+------------+
     | Variable_name           | Value      |
@@ -239,7 +239,7 @@ innodb_buffer_pool_size/innodb_buffer_pool_instances
     mysqld --innodb-buffer-pool-size=9G --innodb-buffer-pool-instances=16
     ```
     那么服务器会自动把`innodb_buffer_pool_size`的值调整为`10G`（10737418240字节），不信你看：
-    ```mysql
+    ```sql
     mysql> show variables like 'innodb_buffer_pool_size';
     +-------------------------+-------------+
     | Variable_name           | Value       |
@@ -258,7 +258,7 @@ innodb_buffer_pool_size/innodb_buffer_pool_instances
     ```
     由于`256M × 16 = 4G`，而`4G > 2G`，所以`innodb_buffer_pool_chunk_size`值会被服务器改写为`innodb_buffer_pool_size/innodb_buffer_pool_instances`的值，也就是：`2G/16 = 128M`（134217728字节），不信你看：
     
-    ```mysql
+    ```sql
     mysql> show variables like 'innodb_buffer_pool_size';
     +-------------------------+------------+
     | Variable_name           | Value      |
@@ -281,7 +281,7 @@ innodb_buffer_pool_size/innodb_buffer_pool_instances
 
 #### 查看Buffer Pool的状态信息
 设计`MySQL`的大佬贴心的给我们提供了`SHOW ENGINE INNODB STATUS`语句来查看关于`InnoDB`存储引擎运行过程中的一些状态信息，其中就包括`Buffer Pool`的一些信息，我们看一下（为了突出重点，我们只把输出中关于`Buffer Pool`的部分提取了出来）：
-```mysql
+```sql
 mysql> SHOW ENGINE INNODB STATUS\G
 
 (...省略前面的许多状态)
@@ -364,7 +364,7 @@ mysql>
 9. 我们可以通过指定`innodb_buffer_pool_instances`来控制`Buffer Pool`实例的个数，每个`Buffer Pool`实例中都有各自独立的链表，互不干扰。
 10. 自`MySQL 5.7.5`版本之后，可以在服务器运行过程中调整`Buffer Pool`大小。每个`Buffer Pool`实例由若干个`chunk`组成，每个`chunk`的大小可以在服务器启动时通过启动参数调整。
 11. 可以用下面的命令查看`Buffer Pool`的状态信息：
-    ```mysql
+    ```sql
     SHOW ENGINE INNODB STATUS\G
     ```
 

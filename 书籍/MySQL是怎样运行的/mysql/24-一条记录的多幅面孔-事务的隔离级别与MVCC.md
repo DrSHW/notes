@@ -1,7 +1,7 @@
 ## 第24章 一条记录的多幅面孔-事务的隔离级别与MVCC
 ### 事前准备
 为了故事的顺利发展，我们需要创建一个表：
-```mysql
+```sql
 CREATE TABLE hero (
     number INT,
     name VARCHAR(100),
@@ -13,11 +13,11 @@ CREATE TABLE hero (
 小贴士：注意我们把这个hero表的主键命名为number，而不是id，主要是想和后边要用到的事务id做区别，大家不用大惊小怪～ 
 ```
 然后向这个表里插入一条数据：
-```mysql
+```sql
 INSERT INTO hero VALUES(1, '刘备', '蜀');
 ```
 现在表里的数据就是这样的：
-```mysql
+```sql
 mysql> SELECT * FROM hero;
 +--------+--------+---------+
 | number | name   | country |
@@ -106,11 +106,11 @@ mysql> SELECT * FROM hero;
 
 ##### 如何设置事务的隔离级别
 我们可以通过下面的语句修改事务的隔离级别：
-```mysql
+```sql
 SET [GLOBAL|SESSION] TRANSACTION ISOLATION LEVEL level;
 ```
 其中的`level`可选值有4个：
-```mysql
+```sql
 level: {
      REPEATABLE READ
    | READ COMMITTED
@@ -123,7 +123,7 @@ level: {
 - 使用`GLOBAL`关键字（在全局范围影响）：
 
     比方说这样：
-    ```mysql
+    ```sql
     SET GLOBAL TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     ```
     则：
@@ -133,7 +133,7 @@ level: {
 - 使用`SESSION`关键字（在会话范围影响）：
 
     比方说这样：
-    ```mysql
+    ```sql
     SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     ```
     则：
@@ -144,7 +144,7 @@ level: {
 - 上述两个关键字都不用（只对执行语句后的下一个事务产生影响）：
     
     比方说这样：
-    ```mysql
+    ```sql
     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
     ```
     则：
@@ -155,7 +155,7 @@ level: {
 如果我们在服务器启动时想改变事务的默认隔离级别，可以修改启动参数`transaction-isolation`的值，比方说我们在启动服务器时指定了`--transaction-isolation=SERIALIZABLE`，那么事务的默认隔离级别就从原来的`REPEATABLE READ`变成了`SERIALIZABLE`。
 
 想要查看当前会话默认的隔离级别可以通过查看系统变量`transaction_isolation`的值来确定：
-```mysql
+```sql
 mysql> SHOW VARIABLES LIKE 'transaction_isolation';
 +-----------------------+-----------------+
 | Variable_name         | Value           |
@@ -165,7 +165,7 @@ mysql> SHOW VARIABLES LIKE 'transaction_isolation';
 1 row in set (0.02 sec)
 ```
 或者使用更简便的写法：
-```mysql
+```sql
 mysql> SELECT @@transaction_isolation;
 +-------------------------+
 | @@transaction_isolation |
@@ -187,7 +187,7 @@ mysql> SELECT @@transaction_isolation;
 - `roll_pointer`：每次对某条聚簇索引记录进行改动时，都会把旧的版本写入到`undo日志`中，然后这个隐藏列就相当于一个指针，可以通过它来找到该记录修改前的信息。
 
 比方说我们的表`hero`现在只包含一条记录：
-```mysql
+```sql
 mysql> SELECT * FROM hero;
 +--------+--------+---------+
 | number | name   | country |
@@ -242,7 +242,7 @@ mysql> SELECT * FROM hero;
 如果某个版本的数据对当前事务不可见的话，那就顺着版本链找到下一个版本的数据，继续按照上面的步骤判断可见性，依此类推，直到版本链中的最后一个版本。如果最后一个版本也不可见的话，那么就意味着该条记录对该事务完全不可见，查询结果就不包含该记录。
 
 在`MySQL`中，`READ COMMITTED`和`REPEATABLE READ`隔离级别的的一个非常大的区别就是<span style="color:violet">它们生成ReadView的时机不同</span>。我们还是以表`hero`为例来，假设现在表`hero`中只有一条由`事务id`为`80`的事务插入的一条记录：
-```mysql
+```sql
 mysql> SELECT * FROM hero;
 +--------+--------+---------+
 | number | name   | country |
@@ -255,7 +255,7 @@ mysql> SELECT * FROM hero;
 
 ##### READ COMMITTED —— 每次读取数据前都生成一个ReadView
 比方说现在系统里有两个`事务id`分别为`100`、`200`的事务在执行：
-```mysql
+```sql
 # Transaction 100
 BEGIN;
 
@@ -278,7 +278,7 @@ BEGIN;
 ![](24-08.png)
 
 假设现在有一个使用`READ COMMITTED`隔离级别的事务开始执行：
-```mysql
+```sql
 # 使用READ COMMITTED隔离级别的事务
 BEGIN;
 
@@ -293,7 +293,7 @@ SELECT * FROM hero WHERE number = 1; # 得到的列name的值为'刘备'
 
 之后，我们把`事务id`为`100`的事务提交一下，就像这样：
 
-```mysql
+```sql
 # Transaction 100
 BEGIN;
 
@@ -304,7 +304,7 @@ UPDATE hero SET name = '张飞' WHERE number = 1;
 COMMIT;
 ```
 然后再到`事务id`为`200`的事务中更新一下表`hero`中`number`为`1`的记录：
-```mysql
+```sql
 # Transaction 200
 BEGIN;
 
@@ -320,7 +320,7 @@ UPDATE hero SET name = '诸葛亮' WHERE number = 1;
 ![](24-09.png)
 
 然后再到刚才使用`READ COMMITTED`隔离级别的事务中继续查找这个`number`为`1`的记录，如下：
-```mysql
+```sql
 # 使用READ COMMITTED隔离级别的事务
 BEGIN;
 
@@ -342,7 +342,7 @@ SELECT * FROM hero WHERE number = 1; # 得到的列name的值为'张飞'
 对于使用`REPEATABLE READ`隔离级别的事务来说，只会在第一次执行查询语句时生成一个`ReadView`，之后的查询就不会重复生成了。我们还是用例子看一下是什么效果。
 
 比方说现在系统里有两个`事务id`分别为`100`、`200`的事务在执行：
-```mysql
+```sql
 # Transaction 100
 BEGIN;
 
@@ -351,7 +351,7 @@ UPDATE hero SET name = '关羽' WHERE number = 1;
 UPDATE hero SET name = '张飞' WHERE number = 1;
 ```
 
-```mysql
+```sql
 # Transaction 200
 BEGIN;
 
@@ -364,7 +364,7 @@ BEGIN;
 ![](24-10.png)
 
 假设现在有一个使用`REPEATABLE READ`隔离级别的事务开始执行：
-```mysql
+```sql
 # 使用REPEATABLE READ隔离级别的事务
 BEGIN;
 
@@ -379,7 +379,7 @@ SELECT * FROM hero WHERE number = 1; # 得到的列name的值为'刘备'
 - 下一个版本的列`name`的内容是`'刘备'`，该版本的`trx_id`值为`80`，小于`ReadView`中的`min_trx_id`值`100`，所以这个版本是符合要求的，最后返回给用户的版本就是这条列`name`为`'刘备'`的记录。
 
 之后，我们把`事务id`为`100`的事务提交一下，就像这样：
-```mysql
+```sql
 # Transaction 100
 BEGIN;
 
@@ -390,7 +390,7 @@ UPDATE hero SET name = '张飞' WHERE number = 1;
 COMMIT;
 ```
 然后再到`事务id`为`200`的事务中更新一下表`hero`中`number`为`1`的记录：
-```mysql
+```sql
 # Transaction 200
 BEGIN;
 
@@ -406,7 +406,7 @@ UPDATE hero SET name = '诸葛亮' WHERE number = 1;
 ![](24-11.png)
 
 然后再到刚才使用`REPEATABLE READ`隔离级别的事务中继续查找这个`number`为`1`的记录，如下：
-```mysql
+```sql
 # 使用REPEATABLE READ隔离级别的事务
 BEGIN;
 

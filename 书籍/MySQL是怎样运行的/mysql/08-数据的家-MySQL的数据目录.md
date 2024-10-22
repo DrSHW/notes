@@ -10,7 +10,7 @@ MySQL服务器程序在启动时会到文件系统的某个目录下加载一些
 
 #### 如何确定MySQL中的数据目录
 那说了半天，到底`MySQL`把数据都存到哪个路径下呢？其实`数据目录`对应着一个系统变量`datadir`，我们在使用客户端与服务器建立连接之后查看这个系统变量的值就可以了：
-```mysql
+```sql
 mysql> SHOW VARIABLES LIKE 'datadir';
 +---------------+-----------------------+
 | Variable_name | Value                 |
@@ -32,7 +32,7 @@ mysql> SHOW VARIABLES LIKE 'datadir';
 2. 在该与数据库名同名的子目录下创建一个名为`db.opt`的文件，这个文件中包含了该数据库的各种属性，比方说该数据库的字符集和比较规则是什么。
 
 比方说我们查看一下<span style="color:violet">在我的计算机上</span>当前有哪些数据库：
-```mysql
+```sql
 mysql> SHOW DATABASES;
 +--------------------+
 | Database           |
@@ -89,7 +89,7 @@ mysql> SHOW DATABASES;
 表名.frm
 ```
 比方说我们在`dahaizi`数据库下创建一个名为`test`的表：
-```mysql
+```sql
 mysql> USE dahaizi;
 Database changed
 
@@ -143,15 +143,15 @@ test.ibd
 innodb_file_per_table=0
 ```
 当`innodb_file_per_table`的值为`0`时，代表使用系统表空间；当`innodb_file_per_table`的值为`1`时，代表使用独立表空间。不过`innodb_file_per_table`参数只对新建的表起作用，对于已经分配了表空间的表并不起作用。如果我们想把已经存在系统表空间中的表转移到独立表空间，可以使用下面的语法：
-```mysql
+```sql
 ALTER TABLE 表名 TABLESPACE [=] innodb_file_per_table;
 ```
 或者把已经存在独立表空间的表转移到系统表空间，可以使用下面的语法：
-```mysql
+```sql
 ALTER TABLE 表名 TABLESPACE [=] innodb_system;
 ```
 其中中括号扩起来的`=`可有可无，比方说我们想把`test`表从独立表空间移动到系统表空间，可以这么写：
-```mysql
+```sql
 ALTER TABLE test TABLESPACE innodb_system;
 ```
 

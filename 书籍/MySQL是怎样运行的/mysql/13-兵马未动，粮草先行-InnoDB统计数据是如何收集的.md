@@ -15,7 +15,7 @@
 设计`MySQL`的大佬们给我们提供了系统变量`innodb_stats_persistent`来控制到底采用哪种方式去存储统计数据。在`MySQL 5.6.6`之前，`innodb_stats_persistent`的值默认是`OFF`，也就是说`InnoDB`的统计数据默认是存储到内存的，之后的版本中`innodb_stats_persistent`的值默认是`ON`，也就是统计数据默认被存储到磁盘中。
     
 不过`InnoDB`默认是<span style="color:violet">以表为单位来收集和存储统计数据的</span>，也就是说我们可以把某些表的统计数据（以及该表的索引统计数据）存储在磁盘上，把另一些表的统计数据存储在内存中。怎么做到的呢？我们可以在创建和修改表的时候通过指定`STATS_PERSISTENT`属性来指明该表的统计数据存储方式：
-```mysql
+```sql
 CREATE TABLE 表名 (...) Engine=InnoDB, STATS_PERSISTENT = (1|0);
 ALTER TABLE 表名 Engine=InnoDB, STATS_PERSISTENT = (1|0);
 ```
@@ -24,7 +24,7 @@ ALTER TABLE 表名 Engine=InnoDB, STATS_PERSISTENT = (1|0);
 ### 基于磁盘的永久性统计数据
 当我们选择把某个表以及该表索引的统计数据存放到磁盘上时，实际上是把这些统计数据存储到了两个表里：
 
-```mysql
+```sql
 mysql> SHOW TABLES FROM mysql LIKE 'innodb%';
 +---------------------------+
 | Tables_in_mysql (innodb%) |
@@ -53,7 +53,7 @@ mysql> SHOW TABLES FROM mysql LIKE 'innodb%';
 | `sum_of_other_index_sizes` | 表的其他索引占用的页面数量 |
 
 注意这个表的主键是`(database_name,table_name)`，也就是<span style="color:violet">innodb_table_stats表的每条记录代表着一个表的统计信息</span>。我们直接看一下这个表里的内容：
-```mysql
+```sql
 mysql> SELECT * FROM mysql.innodb_table_stats;
 +---------------+---------------+---------------------+--------+----------------------+--------------------------+
 | database_name | table_name    | last_update         | n_rows | clustered_index_size | sum_of_other_index_sizes |
@@ -82,7 +82,7 @@ mysql> SELECT * FROM mysql.innodb_table_stats;
     
     我们前面说过，不过`InnoDB`默认是<span style="color:violet">以表为单位来收集和存储统计数据的</span>，我们也可以单独设置某个表的采样页面的数量，设置方式就是在创建或修改表的时候通过指定`STATS_SAMPLE_PAGES`属性来指明该表的统计数据存储方式：
     
-    ```mysql
+    ```sql
     CREATE TABLE 表名 (...) Engine=InnoDB, STATS_SAMPLE_PAGES = 具体的采样页面数量;
     
     ALTER TABLE 表名 Engine=InnoDB, STATS_SAMPLE_PAGES = 具体的采样页面数量;
@@ -144,7 +144,7 @@ mysql> SELECT * FROM mysql.innodb_table_stats;
 
 注意这个表的主键是`(database_name,table_name,index_name,stat_name)`，其中的`stat_name`是指统计项的名称，也就是说<span style="color:violet">innodb_index_stats表的每条记录代表着一个索引的一个统计项</span>。可能这会大家有些懵逼这个统计项到底指什么，别着急，我们直接看一下关于`single_table`表的索引统计数据都有些什么：
 
-```mysql
+```sql
 mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
 +---------------+--------------+--------------+---------------------+--------------+------------+-------------+-----------------------------------+
 | database_name | table_name   | index_name   | last_update         | stat_name    | stat_value | sample_size | stat_description                  |
@@ -206,7 +206,7 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
     系统变量`innodb_stats_auto_recalc`决定着服务器是否自动重新计算统计数据，它的默认值是`ON`，也就是该功能默认是开启的。每个表都维护了一个变量，该变量记录着对该表进行增删改的记录条数，如果发生变动的记录数量超过了表大小的`10%`，并且自动重新计算统计数据的功能是打开的，那么服务器会重新进行一次统计数据的计算，并且更新`innodb_table_stats`和`innodb_index_stats`表。不过<span style="color:violet">自动重新计算统计数据的过程是异步发生的</span>，也就是即使表中变动的记录数超过了`10%`，自动重新计算统计数据也不会立即发生，可能会延迟几秒才会进行计算。
     
     再一次强调，`InnoDB`默认是<span style="color:violet">以表为单位来收集和存储统计数据的</span>，我们也可以单独为某个表设置是否自动重新计算统计数的属性，设置方式就是在创建或修改表的时候通过指定`STATS_AUTO_RECALC`属性来指明该表的统计数据存储方式：
-    ```mysql
+    ```sql
     CREATE TABLE 表名 (...) Engine=InnoDB, STATS_AUTO_RECALC = (1|0);
     
     ALTER TABLE 表名 Engine=InnoDB, STATS_AUTO_RECALC = (1|0);
@@ -217,7 +217,7 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
 
     如果`innodb_stats_auto_recalc`系统变量的值为`OFF`的话，我们也可以手动调用`ANALYZE TABLE`语句来重新计算统计数据，比如我们可以这样更新关于`single_table`表的统计数据：
     
-    ```mysql
+    ```sql
     mysql> ANALYZE TABLE single_table;
     +------------------------+---------+----------+----------+
     | Table                  | Op      | Msg_type | Msg_text |
@@ -233,7 +233,7 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
 
 - 步骤一：更新`innodb_table_stats`表。
     
-    ```mysql
+    ```sql
     UPDATE innodb_table_stats 
         SET n_rows = 1
         WHERE table_name = 'single_table';
@@ -243,7 +243,7 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
 
     更新完`innodb_table_stats`只是单纯的修改了一个表的数据，需要让`MySQL`查询优化器重新加载我们更改过的数据，运行下面的命令就可以了：
     
-    ```mysql
+    ```sql
     FLUSH TABLE single_table;
     ```
 
@@ -261,21 +261,21 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
 
 - 单表查询中单点区间太多，比方说这样：
 
-    ```mysql
+    ```sql
     SELECT * FROM tbl_name WHERE key IN ('xx1', 'xx2', ..., 'xxn');
     ```
     
     当`IN`里的参数数量过多时，采用`index dive`的方式直接访问`B+`树索引去统计每个单点区间对应的记录的数量就太耗费性能了，所以直接依赖统计数据中的平均一个值重复多少行来计算单点区间对应的记录数量。
     
 - 连接查询时，如果有涉及两个表的等值匹配连接条件，该连接条件对应的被驱动表中的列又拥有索引时，则可以使用`ref`访问方法来对被驱动表进行查询，比方说这样：
-    ```mysql
+    ```sql
     SELECT * FROM t1 JOIN t2 ON t1.column = t2.key WHERE ...;
     ```
     在真正执行对`t2`表的查询前，`t1.comumn`的值是不确定的，所以我们也不能通过`index dive`的方式直接访问`B+`树索引去统计每个单点区间对应的记录的数量，所以也只能依赖统计数据中的平均一个值重复多少行来计算单点区间对应的记录数量。
         
 在统计索引列不重复的值的数量时，有一个比较烦的问题就是索引列中出现`NULL`值怎么办，比方说某个索引列的内容是这样：
 
-```mysql
+```sql
 +------+
 | col  |
 +------+
@@ -288,7 +288,7 @@ mysql> SELECT * FROM mysql.innodb_index_stats WHERE table_name = 'single_table';
 此时计算这个`col`列中不重复的值的数量就有下面的分歧：
 
 - 有的人认为`NULL`值代表一个未确定的值，所以设计`MySQL`的大佬才认为任何和`NULL`值做比较的表达式的值都为`NULL`，就是这样：
-    ```mysql
+    ```sql
     mysql> SELECT 1 = NULL;
     +----------+
     | 1 = NULL |

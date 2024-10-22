@@ -27,14 +27,14 @@ ERROR 2003 (HY000): Can't connect to MySQL server on '127.0.0.1' (61)
 mysqld --default-storage-engine=MyISAM
 ```
 我们现在就已经把表的默认存储引擎改为`MyISAM`了，在客户端程序连接到服务器程序后试着创建一个表：
-```mysql
+```sql
 mysql> CREATE TABLE sys_var_demo(
     ->     i INT
     -> );
 Query OK, 0 rows affected (0.02 sec)
 ```
 这个定义语句中我们并没有明确指定表的存储引擎，创建成功后再看一下这个表的结构：
-```mysql
+```sql
 mysql> SHOW CREATE TABLE sys_var_demo\G
 *************************** 1. row ***************************
        Table: sys_var_demo
@@ -295,11 +295,11 @@ mysql.server start --default-storage-engine=MyISAM
 
 #### 查看系统变量
 我们可以使用下列命令查看`MySQL`服务器程序支持的系统变量以及它们的当前值：
-```mysql
+```sql
 SHOW VARIABLES [LIKE 匹配的模式];
 ```
 由于`系统变量`实在太多了，如果我们直接使用`SHOW VARIABLES`查看的话就直接刷屏了，所以通常都会带一个`LIKE`过滤条件来查看我们需要的系统变量的值，比方说这么写：
-```mysql
+```sql
 mysql> SHOW VARIABLES LIKE 'default_storage_engine';
 +------------------------+--------+
 | Variable_name          | Value  |
@@ -317,7 +317,7 @@ mysql> SHOW VARIABLES like 'max_connections';
 1 row in set (0.00 sec)
 ```
 可以看到，现在服务器程序使用的默认存储引擎就是`InnoDB`，允许同时连接的客户端数量最多为`151`。别忘了`LIKE`表达式后边可以跟通配符来进行模糊查询，也就是说我们可以这么写：
-```mysql
+```sql
 mysql> SHOW VARIABLES LIKE 'default%';
 +-------------------------------+-----------------------+
 | Variable_name                 | Value                 |
@@ -355,7 +355,7 @@ mysql>
     ```
 
 当使用上面两种方式中的任意一种启动服务器程序后，我们再来查看一下系统变量的值：
-```mysql
+```sql
 mysql> SHOW VARIABLES LIKE 'default_storage_engine';
 +------------------------+--------+
 | Variable_name          | Value  |
@@ -397,11 +397,11 @@ mysql>
 这话有点儿绕，还是以`default_storage_engine`举例，在服务器启动时会初始化一个名为`default_storage_engine`，作用范围为`GLOBAL`的系统变量。之后每当有一个客户端连接到该服务器时，服务器都会单独为该客户端分配一个名为`default_storage_engine`，作用范围为`SESSION`的系统变量，该作用范围为`SESSION`的系统变量值按照当前作用范围为`GLOBAL`的同名系统变量值进行初始化。
 
 很显然，<span style="color:violet">通过启动选项设置的系统变量的作用范围都是`GLOBAL`的，也就是对所有客户端都有效的</span>，因为在系统启动的时候还没有客户端程序连接进来呢。了解了系统变量的`GLOBAL`和`SESSION`作用范围之后，我们再看一下在服务器程序运行期间通过客户端程序设置系统变量的语法：
-```mysql
+```sql
 SET [GLOBAL|SESSION] 系统变量名 = 值;
 ```
 或者写成这样也行：
-```mysql
+```sql
 SET [@@(GLOBAL|SESSION).]var_name = XXX;
 ```
 比如我们想在服务器运行过程中把作用范围为`GLOBAL`的系统变量`default_storage_engine`的值修改为`MyISAM`，也就是想让后面新连接到服务器的客户端都用`MyISAM`作为默认的存储引擎，那我们可以选择下面两条语句中的任意一条来进行设置：
@@ -423,11 +423,11 @@ SET [@@(GLOBAL|SESSION).]var_name = XXX;
 答：默认查看的是`SESSION`作用范围的系统变量。
 
 当然我们也可以在查看系统变量的语句上加上要查看哪个`作用范围`的系统变量，就像这样：
-```mysql
+```sql
 SHOW [GLOBAL|SESSION] VARIABLES [LIKE 匹配的模式];
 ```
 下面我们演示一下完整的设置并查看系统变量的过程：
-```mysql
+```sql
 mysql> SHOW SESSION VARIABLES LIKE 'default_storage_engine';
 +------------------------+--------+
 | Variable_name          | Value  |
@@ -496,11 +496,11 @@ mysql>
 为了让我们更好的了解服务器程序的运行情况，`MySQL`服务器程序中维护了很多关于程序运行状态的变量，它们被称为`状态变量`。比方说`Threads_connected`表示当前有多少客户端与服务器建立了连接，`Handler_update`表示已经更新了多少行记录等，像这样显示服务器程序状态信息的`状态变量`还有好几百个，我们就不一一介绍了，等遇到了会详细说它们的作用的。
 
 由于`状态变量`是用来显示服务器程序运行状况的，所以<span style="color:violet">它们的值只能由服务器程序自己来设置，我们程序员是不能设置的</span>。与`系统变量`类似，`状态变量`也有`GLOBAL`和`SESSION`两个作用范围的，所以查看`状态变量`的语句可以这么写：
-```mysql
+```sql
 SHOW [GLOBAL|SESSION] STATUS [LIKE 匹配的模式];
 ```
 类似的，如果我们不写明作用范围，默认的作用范围是`SESSION`，比方说这样：
-```mysql
+```sql
 mysql> SHOW STATUS LIKE 'thread%';
 +-------------------+-------+
 | Variable_name     | Value |

@@ -3,7 +3,7 @@
 对于`MySQL 5.6`以及之前的版本来说，查询优化器就像是一个黑盒子一样，你只能通过`EXPLAIN`语句查看到最后优化器决定使用的执行计划，却无法知道它为什么做这个决策。这对于一部分喜欢刨根问底的小伙伴来说简直是灾难：“我就觉得使用其他的执行方案比`EXPLAIN`输出的这种方案强，凭什么优化器做的决定和我想的不一样呢？”
 
 在`MySQL 5.6`以及之后的版本中，设计`MySQL`的大佬贴心的为这部分小伙伴提出了一个`optimizer trace`的功能，这个功能可以让我们方便的查看优化器生成执行计划的整个过程，这个功能的开启与关闭由系统变量`optimizer_trace`决定，我们看一下：
-```mysql
+```sql
 mysql> SHOW VARIABLES LIKE 'optimizer_trace';
 +-----------------+--------------------------+
 | Variable_name   | Value                    |
@@ -17,7 +17,7 @@ mysql> SHOW VARIABLES LIKE 'optimizer_trace';
 小贴士：one_line的值是控制输出格式的，如果为on那么所有输出都将在一行中展示，不适合人阅读，所以我们就保持其默认值为off吧。
 ```
 如果想打开这个功能，必须首先把`enabled`的值改为`on`，就像这样：
-```mysql
+```sql
 mysql> SET optimizer_trace="enabled=on";
 Query OK, 0 rows affected (0.00 sec)
 ```
@@ -28,7 +28,7 @@ Query OK, 0 rows affected (0.00 sec)
 - `INSUFFICIENT_PRIVILEGES`：表示是否没有权限查看优化过程，默认值是0，只有某些特殊情况下才会是`1`，我们暂时不关心这个字段的值。
 
 完整的使用`optimizer trace`功能的步骤总结如下：
-```mysql
+```sql
 # 1. 打开optimizer trace功能 (默认情况下它是关闭的):
 SET optimizer_trace="enabled=on";
 
@@ -45,7 +45,7 @@ SELECT * FROM information_schema.OPTIMIZER_TRACE;
 SET optimizer_trace="enabled=off";
 ```
 现在我们有一个搜索条件比较多的查询语句，它的执行计划如下：
-```mysql
+```sql
 mysql> EXPLAIN SELECT * FROM s1 WHERE
     ->     key1 > 'z' AND
     ->     key2 < 1000000 AND
@@ -59,7 +59,7 @@ mysql> EXPLAIN SELECT * FROM s1 WHERE
 1 row in set, 1 warning (0.00 sec)
 ```
 可以看到该查询可能使用到的索引有3个，那么为什么优化器最终选择了`idx_key2`而不选择其他的索引或者直接全表扫描呢？这时候就可以通过`otpimzer trace`功能来查看优化器的具体工作过程：
-```mysql
+```sql
 SET optimizer_trace="enabled=on";
 
 SELECT * FROM s1 WHERE 
@@ -72,7 +72,7 @@ SELECT * FROM information_schema.OPTIMIZER_TRACE\G
 ```
 我们直接看一下通过查询`OPTIMIZER_TRACE`表得到的输出（我使用`#`后跟随注释的形式为大家解释了优化过程中的一些比较重要的点，大家重点关注一下）：
 
-```mysql
+```sql
 *************************** 1. row ***************************
 # 分析的查询语句是什么
 QUERY: SELECT * FROM s1 WHERE
